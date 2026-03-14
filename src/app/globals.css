@@ -125,5 +125,33 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+}
+
+/* Dev Remoto Simple brand colors */
+:root {
+  --drs-navy-darkest: #060C18;
+  --drs-navy-dark: #070E1B;
+  --drs-navy: #0B1528;
+  --drs-navy-card: #0F2040;
+  --drs-cyan: #00C8D9;
+  --drs-cyan-glow: rgba(0, 200, 217, 0.3);
+}
+
+/* Hide Unicorn Studio watermark (fixed-position badge injected by the SDK) */
+a[href*="unicorn.studio"],
+[data-us-watermark],
+div[style*="position: fixed"][style*="bottom"] a[href*="unicorn"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
