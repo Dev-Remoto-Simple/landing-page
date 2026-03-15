@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import UnicornScene from "unicornstudio-react/next";
 
 // ── Brand tokens (from colors.md + screenshots) ───────────────────────────────
 const BG      = "#021E43"; // hero, about, footer
@@ -66,31 +67,23 @@ export default function Home() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // Load Unicorn Studio SDK + strip watermark via MutationObserver
+  // Strip Unicorn Studio watermark — CSS fires synchronously, observer handles late injections
   useEffect(() => {
-    // Watch for the watermark anchor and remove it immediately when injected
+    const style = document.createElement("style");
+    style.textContent = `a[href*="unicorn.studio"], [class*="unicorn-badge"], [id*="unicorn-badge"] { display: none !important; }`;
+    document.head.appendChild(style);
+
     const observer = new MutationObserver(() => {
-      const badge = document.querySelector('a[href*="unicorn.studio"]');
-      if (badge) {
-        badge.remove();
-      }
+      document.querySelectorAll('a[href*="unicorn.studio"]').forEach(el => el.remove());
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js";
-    s.onload = () => {
-      if (typeof (window as any).UnicornStudio !== "undefined") {
-        (window as any).UnicornStudio.init();
-      }
-    };
-    (document.head || document.body).appendChild(s);
-
     return () => {
       observer.disconnect();
-      s.remove();
+      style.remove();
     };
   }, []);
+
 
   return (
     <div style={{ fontFamily: fB }}>
@@ -135,13 +128,15 @@ export default function Home() {
         className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24"
         style={{ backgroundColor: BG, paddingBottom: "72px", overflow: "visible" }}
       >
-        {/* Unicorn Studio WebGL background (vanilla JS approach) */}
-        <div
-          id="unicorn-hero"
-          data-us-project="KvDrXZbTrzRh3StROTVe"
-          className="pointer-events-none absolute inset-0"
-          style={{ width: "100%", height: "100%" }}
-        />
+        {/* Unicorn Studio WebGL background */}
+        <div className="pointer-events-none absolute inset-0">
+          <UnicornScene
+            projectId="vVUEJx71ofSTVB8IjTSt"
+            sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js"
+            width="100%"
+            height="100%"
+          />
+        </div>
 
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Hero logo — larger size */}
@@ -168,11 +163,6 @@ export default function Home() {
           </h1>
         </div>
 
-        {/* Watermark cover — hides the Unicorn Studio badge */}
-        <div
-          className="absolute bottom-0 left-0 right-0"
-          style={{ height: "90px", backgroundColor: BG, zIndex: 9999 }}
-        />
 
         {/* ÚNETE — straddles hero + purpose (overlaps downward) */}
         <a
@@ -188,9 +178,9 @@ export default function Home() {
             color: "#fff",
             fontFamily: fH,
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "2rem",
             letterSpacing: "0.18em",
-            padding: "16px 56px",
+            padding: "28px 72px",
             boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
           }}
         >
