@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import UnicornScene from "unicornstudio-react/next";
+import dynamic from "next/dynamic";
+
+const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center animate-pulse bg-slate-50 rounded-full">
+      <div className="w-32 h-32 rounded-full border-2 border-dashed border-blue-200" />
+    </div>
+  ),
+});
 
 // ── Brand tokens (from colors.md + screenshots) ───────────────────────────────
 const BG      = "#021E43"; // hero, about, footer
@@ -67,6 +76,36 @@ export default function Home() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  // Load Unicorn Studio SDK and init scene only on the hero element
+  useEffect(() => {
+    let scene: any = null;
+    const SDK_URL = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js";
+
+    const initScene = async () => {
+      const US = (window as any).UnicornStudio;
+      if (!US) return;
+      scene = await US.addScene({
+        elementId: "unicorn-hero",
+        projectId: "vVUEJx71ofSTVB8IjTSt",
+        scale: 1,
+        dpi: 1.5,
+        fps: 60,
+        lazyLoad: false,
+      });
+    };
+
+    if ((window as any).UnicornStudio) {
+      initScene();
+    } else {
+      const s = document.createElement("script");
+      s.src = SDK_URL;
+      s.onload = () => initScene();
+      document.head.appendChild(s);
+    }
+
+    return () => { scene?.destroy(); };
+  }, []);
+
   // Strip Unicorn Studio watermark — CSS fires synchronously, observer handles late injections
   useEffect(() => {
     const style = document.createElement("style");
@@ -129,14 +168,7 @@ export default function Home() {
         style={{ backgroundColor: BG, paddingBottom: "72px", overflow: "visible" }}
       >
         {/* Unicorn Studio WebGL background */}
-        <div className="pointer-events-none absolute inset-0">
-          <UnicornScene
-            projectId="vVUEJx71ofSTVB8IjTSt"
-            sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js"
-            width="100%"
-            height="100%"
-          />
-        </div>
+        <div id="unicorn-hero" className="pointer-events-none absolute inset-0" style={{ width: "100%", height: "100%" }} />
 
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Hero logo — larger size */}
@@ -189,74 +221,109 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SCREEN 2 — PURPOSE
-          Background: white + world-map PNG
-          Top padding accommodates the ÚNETE button overlap
-      ══════════════════════════════════════════════════════════════════════ */}
-      <section
-        id="comunidad"
-        className="relative overflow-hidden px-6 pb-20"
-        style={{ backgroundColor: "#FFFFFF", paddingTop: "80px" }}
-      >
-        {/* World-map background */}
-        <div
-          className="pointer-events-none absolute inset-0 bg-center bg-cover"
-          style={{
-            backgroundImage: "url('/mapa-bg.png')",
-            backgroundSize: "70%",
-            backgroundPosition: "center center",
-            backgroundRepeat: "no-repeat",
-            opacity: 0.35,
-          }}
-        />
+    SECTION 2 — PURPOSE (REFINED)
+══════════════════════════════════════════════════════════════════════ */}
+<section
+  id="comunidad"
+  className="relative overflow-hidden px-6 pb-24 pt-32 lg:pt-48"
+  style={{ 
+    backgroundColor: "#FFFFFF",
+    backgroundImage: `radial-gradient(circle at 15% 50%, #f0f9ff 0%, #ffffff 100%)` 
+  }}
+>
+  <div className="relative z-10 mx-auto max-w-7xl">
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-4">
 
-        <div className="relative z-10 mx-auto max-w-5xl text-center">
+      {/* GLOBE CONTAINER — Optimized for screen scaling */}
+      <div className="relative w-full max-w-[500px] aspect-square flex-shrink-0 lg:w-[45%] lg:max-w-none xl:scale-110 lg:-ml-12">
+        {/* Glow effect slightly more transparent for better blending */}
+        <div className="absolute inset-0 z-0 bg-blue-400/5 blur-[120px] rounded-full scale-110" />
+        
+        <div className="relative z-10 w-full h-full">
+          <World
+            globeConfig={{
+              pointSize: 4,
+              globeColor: "#062056",
+              showAtmosphere: true,
+              atmosphereColor: CYAN,
+              atmosphereAltitude: 0.15,
+              emissive: "#062056",
+              emissiveIntensity: 0.1,
+              shininess: 0.9,
+              polygonColor: "rgba(255,255,255,0.7)",
+              ambientLight: "#38bdf8",
+              directionalLeftLight: "#ffffff",
+              directionalTopLight: "#ffffff",
+              pointLight: "#ffffff",
+              arcTime: 2000,
+              arcLength: 0.9,
+              rings: 2,
+              maxRings: 4,
+              initialPosition: { lat: -16.5, lng: -68.15 },
+              autoRotate: true,
+              autoRotateSpeed: 0.4,
+            }}
+            data={[
+              { order: 1, startLat: -16.5, startLng: -68.15, endLat: 37.7749, endLng: -122.4194, arcAlt: 0.5, color: CYAN },
+              { order: 2, startLat: -16.5, startLng: -68.15, endLat: 40.7128, endLng: -74.0060, arcAlt: 0.4, color: "#3b82f6" },
+              { order: 3, startLat: -16.5, startLng: -68.15, endLat: 51.5074, endLng: -0.1278, arcAlt: 0.7, color: CYAN },
+              { order: 4, startLat: -16.5, startLng: -68.15, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.8, color: "#6366f1" },
+              { order: 5, startLat: -16.5, startLng: -68.15, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.6, color: CYAN },
+              { order: 6, startLat: -16.5, startLng: -68.15, endLat: 25.2048, endLng: 55.2708, arcAlt: 0.5, color: "#3b82f6" },
+              { order: 7, startLat: -16.5, startLng: -68.15, endLat: 48.8566, endLng: 2.3522, arcAlt: 0.4, color: "#6366f1" },
+              { order: 8, startLat: -16.5, startLng: -68.15, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.2, color: CYAN },
+            ]}
+          />
+        </div>
+      </div>
+
+      {/* TEXT CONTENT */}
+      <div className="flex-1 text-center lg:text-left z-20 lg:max-w-[50%]">
+        <header className="mb-12">
           <h2
-            className="text-3xl font-bold sm:text-4xl"
+            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-[1.1]"
             style={{ color: BRAND, fontFamily: fH }}
           >
-            En el mundo de hoy no existen barreras.
+            En el mundo de hoy <br />
+            <span className="text-blue-500">no existen barreras.</span>
           </h2>
-          <p className="mt-4 text-lg" style={{ color: "#4A5A72" }}>
+          <p className="mt-8 text-xl lg:text-2xl leading-relaxed text-slate-600 max-w-xl mx-auto lg:mx-0">
             Por eso sabemos que podemos competir{" "}
-            <strong style={{ color: BRAND }}>a nivel global.</strong>
+            <strong className="text-slate-900" style={{ borderBottom: `3px solid ${CYAN}` }}>a nivel global.</strong>
           </p>
-          <p className="mt-4 text-base" style={{ color: "#4A5A72" }}>
-            Por eso,{" "}
-            <strong style={{ color: BRAND }}>nuestro propósito es:</strong>
-          </p>
+          <p className="text-lg font-medium text-slate-400 uppercase tracking-widest">
+              Por eso,<span className="font-bold text-slate-900 px-1">nuestro propósito es :</span> 
+            </p>
+        </header>
 
-          {/* Stars */}
-          <div className="mt-3 flex justify-center gap-5">
-            {[...Array(4)].map((_, i) => (
-              <span key={i} style={{ color: CYAN, fontSize: "16px" }} aria-hidden>✦</span>
-            ))}
-          </div>
-
-          {/* 4 Purpose cards */}
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {purposes.map(({ icon, title, desc }, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-start rounded-2xl p-6 text-left transition-all duration-200 hover:-translate-y-1 cursor-pointer"
-                style={{
-                  backgroundColor: `rgba(19,77,145,0.77)`,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                }}
-              >
-                <span className="mb-2 text-xs" style={{ color: `${CYAN}90` }} aria-hidden>✦</span>
-                <div className="mb-4 h-14 w-14 flex items-center justify-center">
-                  <Image src={icon} alt={title} width={52} height={52} className="object-contain" />
-                </div>
-                <p className="text-sm leading-relaxed text-white">
-                  <strong>{title} </strong>{desc}
-                </p>
+        {/* 4 Purpose cards — 2x2 Grid with Refined Styling */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {purposes.map(({ icon, title, desc }, i) => (
+            <div
+              key={i}
+              className="group relative flex flex-col items-start rounded-3xl p-6 transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] bg-white border border-slate-100"
+            >
+              {/* Subtle Top Accent */}
+              <div className="absolute top-0 left-8 right-8 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: BRAND }} />
+              
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 group-hover:bg-blue-50 transition-colors duration-500">
+                <Image src={icon} alt={title} width={36} height={36} className="object-contain" />
               </div>
-            ))}
-          </div>
+              
+              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND }}>
+                {title}
+              </h3>
+              <p className="text-sm leading-relaxed text-slate-500 group-hover:text-slate-700 transition-colors">
+                {desc}
+              </p>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
+    </div>
+  </div>
+</section>
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 3 — STATS + MEMBERS
           Background: #0C3F78, white text, cyan accent
