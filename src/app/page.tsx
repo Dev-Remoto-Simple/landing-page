@@ -6,6 +6,15 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { ShinyButton } from "@/components/ui/shiny-button";
+import { MovingBorderButton } from "@/components/ui/moving-border";
+import { FloatingDock } from "@/components/ui/floating-dock";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { SparklesCore } from "@/components/ui/sparkles";
+import { Vortex } from "@/components/ui/vortex";
+import { MessageCircle, Globe2, Home as HomeIcon, Users, Calendar } from "lucide-react";
 
 const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
   ssr: false,
@@ -433,13 +442,8 @@ export default function Home() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="px-6 py-20" style={{ backgroundColor: "#FFFFFF" }}>
         <div className="mx-auto max-w-2xl">
-          <div
-            className="rounded-3xl p-10 text-center md:p-14"
-            style={{
-              backgroundColor: MID,
-              boxShadow: "0 8px 40px rgba(12,63,120,0.25)",
-            }}
-          >
+          <BackgroundGradient containerClassName="rounded-3xl" className="rounded-3xl">
+            <div className="p-10 text-center md:p-14" style={{ backgroundColor: MID, borderRadius: "inherit" }}>
             <h2
               className="text-5xl font-bold italic text-white sm:text-6xl"
               style={{ fontFamily: fH }}
@@ -452,26 +456,24 @@ export default function Home() {
               <strong>semana</strong>, un evento presencial y una masterclass{" "}
               <strong>cada mes.</strong>
             </p>
-            <div className="mt-8">
-              <a
+            <div className="mt-8 flex justify-center">
+              <MovingBorderButton
+                as="a"
                 href="#"
-                className="inline-block cursor-pointer transition-all duration-200 hover:bg-gray-50"
+                duration={2200}
+                containerClassName="rounded-full"
+                className="px-8 py-3 text-sm font-semibold cursor-pointer"
                 style={{
-                  borderRadius: "9999px",
                   backgroundColor: "#FFFFFF",
                   color: BRAND,
-                  border: `1px solid ${BRAND}`,
                   fontFamily: fB,
-                  fontSize: "0.875rem",
-                  fontWeight: 500,
-                  padding: "12px 32px",
                 }}
               >
-                Únete a los eventos{" "}
-                <strong>ahora</strong>
-              </a>
+                Únete a los eventos <strong>ahora</strong>
+              </MovingBorderButton>
             </div>
-          </div>
+            </div>
+          </BackgroundGradient>
         </div>
       </section>
 
@@ -509,37 +511,39 @@ export default function Home() {
             EN EMPRESAS
           </h2>
 
-          <p className="mx-auto mt-7 max-w-lg text-base leading-relaxed" style={{ color: BRAND }}>
-            <strong>Apoyamos a las organizaciones en su contratación</strong> de talento tecnológico
-            mediante servicios de <strong>staffing boutique</strong>, y el desarrollo de su
-            estrategia tecnológica desde los primeros pasos{" "}
-            <strong>hasta su implementación.</strong>
-          </p>
+          <TextGenerateEffect
+            words="Apoyamos a las organizaciones en su contratación de talento tecnológico mediante servicios de staffing boutique, y el desarrollo de su estrategia tecnológica desde los primeros pasos hasta su implementación."
+            className="mx-auto mt-7 max-w-lg text-base leading-relaxed font-normal"
+            filter={true}
+            duration={0.3}
+            style={{ color: BRAND } as any}
+          />
         </div>
 
         {/* CONOCE MÁS — straddles empresas + about */}
-        <a
-          href="#nosotros"
-          className="absolute left-1/2 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
-          style={{
-            bottom: "-28px",
-            transform: "translateX(-50%)",
-            zIndex: 20,
-            display: "inline-block",
-            borderRadius: "9999px",
-            backgroundColor: BRAND,
-            color: "#fff",
-            fontFamily: fH,
-            fontWeight: 700,
-            fontSize: "0.875rem",
-            letterSpacing: "0.18em",
-            padding: "14px 44px",
-            boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
-            whiteSpace: "nowrap",
-          }}
+        <div
+          className="absolute left-1/2"
+          style={{ bottom: "-28px", transform: "translateX(-50%)", zIndex: 20 }}
         >
-          CONOCE MÁS
-        </a>
+          <ShinyButton
+            onClick={() => { window.location.href = "#nosotros"; }}
+            className="cursor-pointer"
+            style={{
+              "--shine-color": "#fff",
+              backgroundColor: BRAND,
+              color: "#fff",
+              fontFamily: fH,
+              fontWeight: 700,
+              fontSize: "0.875rem",
+              letterSpacing: "0.18em",
+              padding: "14px 44px",
+              boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
+              whiteSpace: "nowrap",
+            } as any}
+          >
+            CONOCE MÁS
+          </ShinyButton>
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -582,15 +586,10 @@ export default function Home() {
           <div className="mt-12 flex flex-col items-center">
             {/* Avatar */}
             <div
-              className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full text-3xl font-bold text-white"
-              style={{
-                background: `linear-gradient(135deg, ${CYAN}55 0%, #2A5A7C 100%)`,
-                border: `3px solid ${CYAN}`,
-                boxShadow: `0 0 30px ${CYAN}35`,
-              }}
-              aria-label="Foto de Mateo Puña"
+              className="h-28 w-28 overflow-hidden rounded-full"
+              style={{ border: `3px solid ${CYAN}`, boxShadow: `0 0 30px ${CYAN}35` }}
             >
-              M
+              <Image src="/Mateo Puña.png" alt="Mateo Puña" width={112} height={112} className="h-full w-full object-cover" />
             </div>
             <p className="mt-5 text-xl font-bold text-white" style={{ fontFamily: fH }}>
               Mateo Puña
@@ -607,59 +606,24 @@ export default function Home() {
 
       {/* ══════════════════════════════════════════════════════════════════════
           FOOTER
-          Background: #021E43
       ══════════════════════════════════════════════════════════════════════ */}
-      <footer
-        className="px-6 py-10"
-        style={{ backgroundColor: BG, borderTop: `1px solid rgba(116,250,253,0.12)` }}
-      >
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-8 sm:flex-row">
-          {/* Logo + tagline */}
-          <div>
-            <Image src="/logo.svg" alt="Dev Remoto Simple" width={140} height={29} />
-            <p className="mt-2 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-              You can build{" "}
-              <strong style={{ color: "rgba(255,255,255,0.65)" }}>global</strong> things.
-            </p>
-          </div>
-
-          {/* Social */}
-          <div className="flex items-center gap-3">
-            <span
-              className="text-[10px] font-bold tracking-[0.2em] uppercase"
-              style={{ color: "rgba(255,255,255,0.4)" }}
-            >
-              Redes Sociales
-            </span>
-            {/* LinkedIn */}
-            <a
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ backgroundColor: `${CYAN}18`, border: `1px solid ${CYAN}40` }}
-              aria-label="LinkedIn"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                <rect x="2" y="9" width="4" height="12" />
-                <circle cx="4" cy="4" r="2" />
-              </svg>
-            </a>
-            {/* WhatsApp */}
-            <a
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer transition-all duration-200 hover:scale-110"
-              style={{ backgroundColor: `${CYAN}18`, border: `1px solid ${CYAN}40` }}
-              aria-label="WhatsApp"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-              </svg>
-            </a>
-          </div>
-
-          {/* CTA */}
+      <footer style={{ backgroundColor: BG }}>
+        {/* Vortex CTA strip */}
+        <Vortex
+          containerClassName="w-full"
+          className="flex flex-col items-center justify-center py-16 px-6 text-center"
+          particleCount={300}
+          baseHue={185}
+          backgroundColor="transparent"
+        >
+          <p className="mb-2 text-sm font-medium tracking-widest uppercase" style={{ color: `${CYAN}99` }}>
+            Empieza hoy
+          </p>
+          <h3 className="mb-6 text-3xl font-bold text-white sm:text-4xl" style={{ fontFamily: fH }}>
+            You can build <span style={{ color: CYAN }}>global</span> things.
+          </h3>
           <a
-            href="#"
+            href="#comunidad"
             className="inline-block cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
             style={{
               borderRadius: "9999px",
@@ -667,15 +631,53 @@ export default function Home() {
               color: "#fff",
               fontFamily: fH,
               fontWeight: 700,
-              fontSize: "0.75rem",
+              fontSize: "0.875rem",
               letterSpacing: "0.2em",
-              padding: "12px 36px",
-              boxShadow: `0 4px 20px rgba(19,77,145,0.4)`,
+              padding: "16px 48px",
+              boxShadow: `0 4px 24px rgba(19,77,145,0.5), 0 0 40px ${CYAN}22`,
             }}
           >
             ÚNETE AHORA
           </a>
-        </div>
+        </Vortex>
+
+        {/* Bottom bar with logo + floating dock */}
+        <BackgroundBeamsWithCollision className="min-h-0 py-8 px-6">
+          <div className="relative z-10 mx-auto w-full max-w-5xl flex flex-col items-center gap-6">
+            {/* Sparkles strip */}
+            <div className="w-64 h-10 relative">
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1.2}
+                particleDensity={60}
+                particleColor={CYAN}
+                speed={0.8}
+                className="w-full h-full"
+              />
+            </div>
+
+            {/* Logo */}
+            <Image src="/logo.svg" alt="Dev Remoto Simple" width={120} height={25} />
+
+            {/* Floating Dock */}
+            <FloatingDock
+              items={[
+                { title: "Inicio", icon: <HomeIcon className="w-full h-full text-white/70" />, href: "#" },
+                { title: "Comunidad", icon: <Users className="w-full h-full text-white/70" />, href: "#comunidad" },
+                { title: "Eventos", icon: <Calendar className="w-full h-full text-white/70" />, href: "#" },
+                { title: "LinkedIn", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-white/70"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>, href: "#" },
+                { title: "WhatsApp", icon: <MessageCircle className="w-full h-full text-white/70" />, href: "#" },
+                { title: "Web", icon: <Globe2 className="w-full h-full text-white/70" />, href: "#" },
+              ]}
+              desktopClassName="border-white/10"
+            />
+
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+              © {new Date().getFullYear()} Dev Remoto Simple
+            </p>
+          </div>
+        </BackgroundBeamsWithCollision>
       </footer>
     </div>
   );
