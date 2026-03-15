@@ -9,7 +9,6 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { ShinyButton } from "@/components/ui/shiny-button";
-import { MovingBorderButton } from "@/components/ui/moving-border";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { SparklesCore } from "@/components/ui/sparkles";
@@ -457,20 +456,23 @@ export default function Home() {
               <strong>cada mes.</strong>
             </p>
             <div className="mt-8 flex justify-center">
-              <MovingBorderButton
-                as="a"
+              <a
                 href="#"
-                duration={2200}
-                containerClassName="rounded-full"
-                className="px-8 py-3 text-sm font-semibold cursor-pointer"
+                className="inline-block cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg"
                 style={{
-                  backgroundColor: "#FFFFFF",
-                  color: BRAND,
-                  fontFamily: fB,
+                  borderRadius: "9999px",
+                  border: `2px solid ${CYAN}`,
+                  color: CYAN,
+                  fontFamily: fH,
+                  fontWeight: 600,
+                  fontSize: "0.95rem",
+                  padding: "14px 44px",
+                  letterSpacing: "0.04em",
+                  boxShadow: `0 0 24px ${CYAN}22`,
                 }}
               >
                 Únete a los eventos <strong>ahora</strong>
-              </MovingBorderButton>
+              </a>
             </div>
             </div>
           </BackgroundGradient>
@@ -586,18 +588,18 @@ export default function Home() {
           <div className="mt-12 flex flex-col items-center">
             {/* Avatar */}
             <div
-              className="h-28 w-28 overflow-hidden rounded-full"
-              style={{ border: `3px solid ${CYAN}`, boxShadow: `0 0 30px ${CYAN}35` }}
+              className="h-44 w-44 overflow-hidden rounded-full"
+              style={{ border: `4px solid ${CYAN}`, boxShadow: `0 0 48px ${CYAN}45` }}
             >
-              <Image src="/Mateo Puña.png" alt="Mateo Puña" width={112} height={112} className="h-full w-full object-cover" />
+              <Image src="/Mateo Puña.png" alt="Mateo Puña" width={176} height={176} className="h-full w-full object-cover" />
             </div>
-            <p className="mt-5 text-xl font-bold text-white" style={{ fontFamily: fH }}>
+            <p className="mt-6 text-3xl font-bold text-white" style={{ fontFamily: fH }}>
               Mateo Puña
             </p>
-            <p className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+            <p className="mt-2 text-base" style={{ color: "rgba(255,255,255,0.65)" }}>
               Senior Founding Engineer
             </p>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+            <p className="text-base" style={{ color: "rgba(255,255,255,0.65)" }}>
               Founder Dev Remoto Simple
             </p>
           </div>
@@ -642,21 +644,8 @@ export default function Home() {
         </Vortex>
 
         {/* Bottom bar with logo + floating dock */}
-        <BackgroundBeamsWithCollision className="min-h-0 py-8 px-6">
+        <BackgroundBeamsWithCollision className="min-h-0 py-10 px-6">
           <div className="relative z-10 mx-auto w-full max-w-5xl flex flex-col items-center gap-6">
-            {/* Sparkles strip */}
-            <div className="w-64 h-10 relative">
-              <SparklesCore
-                background="transparent"
-                minSize={0.4}
-                maxSize={1.2}
-                particleDensity={60}
-                particleColor={CYAN}
-                speed={0.8}
-                className="w-full h-full"
-              />
-            </div>
-
             {/* Logo */}
             <Image src="/logo.svg" alt="Dev Remoto Simple" width={120} height={25} />
 
@@ -676,6 +665,19 @@ export default function Home() {
             <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
               © {new Date().getFullYear()} Dev Remoto Simple
             </p>
+
+            {/* Sparkles strip — bottom of footer */}
+            <div className="w-72 h-10 relative">
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1.2}
+                particleDensity={60}
+                particleColor={CYAN}
+                speed={0.8}
+                className="w-full h-full"
+              />
+            </div>
           </div>
         </BackgroundBeamsWithCollision>
       </footer>
