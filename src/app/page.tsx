@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 
 const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
   ssr: false,
@@ -221,114 +224,144 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-    SECTION 2 — PURPOSE (REFINED)
-══════════════════════════════════════════════════════════════════════ */}
-<section
-  id="comunidad"
-  className="relative overflow-hidden px-6 pb-24 pt-32 lg:pt-48"
-  style={{ 
-    backgroundColor: "#FFFFFF",
-    backgroundImage: `radial-gradient(circle at 15% 50%, #f0f9ff 0%, #ffffff 100%)` 
-  }}
->
-  <div className="relative z-10 mx-auto max-w-7xl">
-    <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-4">
+          SCREEN 2 — PURPOSE
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section
+        id="comunidad"
+        className="relative overflow-hidden px-6 pb-24 pt-32 lg:pt-44"
+        style={{
+          backgroundColor: "#FFFFFF",
+          backgroundImage: `radial-gradient(circle at 15% 50%, #f0f9ff 0%, #ffffff 70%)`,
+        }}
+      >
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-20">
 
-      {/* GLOBE CONTAINER — Optimized for screen scaling */}
-      <div className="relative w-full max-w-[500px] aspect-square flex-shrink-0 lg:w-[45%] lg:max-w-none xl:scale-110 lg:-ml-12">
-        {/* Glow effect slightly more transparent for better blending */}
-        <div className="absolute inset-0 z-0 bg-blue-400/5 blur-[120px] rounded-full scale-110" />
-        
-        <div className="relative z-10 w-full h-full">
-          <World
-            globeConfig={{
-              pointSize: 4,
-              globeColor: "#062056",
-              showAtmosphere: true,
-              atmosphereColor: CYAN,
-              atmosphereAltitude: 0.15,
-              emissive: "#062056",
-              emissiveIntensity: 0.1,
-              shininess: 0.9,
-              polygonColor: "rgba(255,255,255,0.7)",
-              ambientLight: "#38bdf8",
-              directionalLeftLight: "#ffffff",
-              directionalTopLight: "#ffffff",
-              pointLight: "#ffffff",
-              arcTime: 2000,
-              arcLength: 0.9,
-              rings: 2,
-              maxRings: 4,
-              initialPosition: { lat: -16.5, lng: -68.15 },
-              autoRotate: true,
-              autoRotateSpeed: 0.4,
-            }}
-            data={[
-              { order: 1, startLat: -16.5, startLng: -68.15, endLat: 37.7749, endLng: -122.4194, arcAlt: 0.5, color: CYAN },
-              { order: 2, startLat: -16.5, startLng: -68.15, endLat: 40.7128, endLng: -74.0060, arcAlt: 0.4, color: "#3b82f6" },
-              { order: 3, startLat: -16.5, startLng: -68.15, endLat: 51.5074, endLng: -0.1278, arcAlt: 0.7, color: CYAN },
-              { order: 4, startLat: -16.5, startLng: -68.15, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.8, color: "#6366f1" },
-              { order: 5, startLat: -16.5, startLng: -68.15, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.6, color: CYAN },
-              { order: 6, startLat: -16.5, startLng: -68.15, endLat: 25.2048, endLng: 55.2708, arcAlt: 0.5, color: "#3b82f6" },
-              { order: 7, startLat: -16.5, startLng: -68.15, endLat: 48.8566, endLng: 2.3522, arcAlt: 0.4, color: "#6366f1" },
-              { order: 8, startLat: -16.5, startLng: -68.15, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.2, color: CYAN },
-            ]}
-          />
-        </div>
-      </div>
-
-      {/* TEXT CONTENT */}
-      <div className="flex-1 text-center lg:text-left z-20 lg:max-w-[50%]">
-        <header className="mb-12">
-          <h2
-            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-[1.1]"
-            style={{ color: BRAND, fontFamily: fH }}
-          >
-            En el mundo de hoy <br />
-            <span className="text-blue-500">no existen barreras.</span>
-          </h2>
-          <p className="mt-8 text-xl lg:text-2xl leading-relaxed text-slate-600 max-w-xl mx-auto lg:mx-0">
-            Por eso sabemos que podemos competir{" "}
-            <strong className="text-slate-900" style={{ borderBottom: `3px solid ${CYAN}` }}>a nivel global.</strong>
-          </p>
-          <p className="text-lg font-medium text-slate-400 uppercase tracking-widest">
-              Por eso,<span className="font-bold text-slate-900 px-1">nuestro propósito es :</span> 
-            </p>
-        </header>
-
-        {/* 4 Purpose cards — 2x2 Grid with Refined Styling */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {purposes.map(({ icon, title, desc }, i) => (
-            <div
-              key={i}
-              className="group relative flex flex-col items-start rounded-3xl p-6 transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] bg-white border border-slate-100"
+            {/* Globe — shrunk ~15%, left column */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative w-full max-w-[420px] aspect-square flex-shrink-0 lg:w-[38%] lg:max-w-none"
             >
-              {/* Subtle Top Accent */}
-              <div className="absolute top-0 left-8 right-8 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: BRAND }} />
-              
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 group-hover:bg-blue-50 transition-colors duration-500">
-                <Image src={icon} alt={title} width={36} height={36} className="object-contain" />
+              <div className="absolute inset-0 bg-blue-400/5 blur-[100px] rounded-full" />
+              <div className="relative w-full h-full">
+                <World
+                  globeConfig={{
+                    pointSize: 4,
+                    globeColor: "#062056",
+                    showAtmosphere: true,
+                    atmosphereColor: CYAN,
+                    atmosphereAltitude: 0.15,
+                    emissive: "#062056",
+                    emissiveIntensity: 0.1,
+                    shininess: 0.9,
+                    polygonColor: "rgba(255,255,255,0.7)",
+                    ambientLight: "#38bdf8",
+                    directionalLeftLight: "#ffffff",
+                    directionalTopLight: "#ffffff",
+                    pointLight: "#ffffff",
+                    arcTime: 2000,
+                    arcLength: 0.9,
+                    rings: 2,
+                    maxRings: 4,
+                    autoRotate: true,
+                    autoRotateSpeed: 0.4,
+                  }}
+                  data={[
+                    { order: 1, startLat: -16.5, startLng: -68.15, endLat: 37.7749, endLng: -122.4194, arcAlt: 0.5, color: CYAN },
+                    { order: 2, startLat: -16.5, startLng: -68.15, endLat: 40.7128, endLng: -74.006,   arcAlt: 0.4, color: "#3b82f6" },
+                    { order: 3, startLat: -16.5, startLng: -68.15, endLat: 51.5074, endLng: -0.1278,   arcAlt: 0.7, color: CYAN },
+                    { order: 4, startLat: -16.5, startLng: -68.15, endLat: 35.6762, endLng: 139.6503,  arcAlt: 0.8, color: "#6366f1" },
+                    { order: 5, startLat: -16.5, startLng: -68.15, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.6, color: CYAN },
+                    { order: 6, startLat: -16.5, startLng: -68.15, endLat: 25.2048, endLng: 55.2708,   arcAlt: 0.5, color: "#3b82f6" },
+                    { order: 7, startLat: -16.5, startLng: -68.15, endLat: 48.8566, endLng: 2.3522,    arcAlt: 0.4, color: "#6366f1" },
+                    { order: 8, startLat: -16.5, startLng: -68.15, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.2, color: CYAN },
+                  ]}
+                />
               </div>
-              
-              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND }}>
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed text-slate-500 group-hover:text-slate-700 transition-colors">
-                {desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+            </motion.div>
 
-    </div>
-  </div>
-</section>
+            {/* Text + cards — right column */}
+            <div className="flex-1 text-center lg:text-left z-20">
+
+              {/* Heading — reveals first */}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                <h2
+                  className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl leading-snug"
+                  style={{ color: BRAND, fontFamily: fH }}
+                >
+                  En el mundo de hoy no existen barreras.
+                </h2>
+                <p className="mt-5 text-lg leading-relaxed" style={{ color: "#4A5A72" }}>
+                  Por eso sabemos que podemos competir{" "}
+                  <strong style={{ color: BRAND, textShadow: `0 0 20px ${CYAN}55` }}>a nivel global.</strong>
+                </p>
+                <p className="mt-3 text-base" style={{ color: "#4A5A72" }}>
+                  Por eso, <strong style={{ color: BRAND }}>nuestro propósito es:</strong>
+                </p>
+              </motion.div>
+
+              {/* Cards — staggered slide-up */}
+              <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {purposes.map(({ icon, title, desc }, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 32 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5, delay: 0.15 * i, ease: "easeOut" }}
+                    className="group relative flex flex-col items-start rounded-2xl p-6 cursor-pointer border border-slate-100 bg-white"
+                    style={{ transition: "all 0.35s ease" }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 40px rgba(19,77,145,0.12), 0 0 0 1px rgba(116,250,253,0.25)`;
+                      (e.currentTarget as HTMLElement).style.background = "rgba(240,249,255,0.7)";
+                      (e.currentTarget as HTMLElement).style.backdropFilter = "blur(8px)";
+                      (e.currentTarget as HTMLElement).style.borderColor = `${CYAN}55`;
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                      (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                      (e.currentTarget as HTMLElement).style.background = "#ffffff";
+                      (e.currentTarget as HTMLElement).style.backdropFilter = "none";
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgb(241 245 249)";
+                    }}
+                  >
+                    {/* Top accent bar on hover */}
+                    <div
+                      className="absolute top-0 left-6 right-6 h-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ backgroundColor: CYAN }}
+                    />
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-blue-50 transition-colors duration-300">
+                      <Image src={icon} alt={title} width={36} height={36} className="object-contain" />
+                    </div>
+                    <h3 className="mb-1 text-base font-bold" style={{ color: BRAND, fontFamily: fH }}>
+                      {title}
+                    </h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
+                      {desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 3 — STATS + MEMBERS
           Background: #0C3F78, white text, cyan accent
       ══════════════════════════════════════════════════════════════════════ */}
-      <section className="px-6 py-24" style={{ backgroundColor: MID }}>
+      <section className="relative px-6 py-24 overflow-hidden" style={{ backgroundColor: MID }}>
+        <BackgroundBeams />
         {/* Stats */}
         <div className="mx-auto max-w-3xl text-center" ref={statsRef}>
           <div
@@ -346,30 +379,52 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Member cards */}
-        <div className="mx-auto mt-16 max-w-6xl">
-          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
-            {Array(5).fill(null).map((_, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-52 snap-start rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:-translate-y-1"
-                style={{ backgroundColor: BRAND }}
-              >
-                <div
-                  className="mb-4 h-32 w-full rounded-xl"
-                  style={{ background: `linear-gradient(160deg, #1A5AAE 0%, #0E3D78 100%)` }}
-                  aria-hidden
-                />
-                <div className="mb-1 text-xs font-bold tracking-widest" style={{ color: CYAN }}>
-                  TÍTULO
-                </div>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  Cuerpo de texto, descripción de foto o frase explicativa.
-                </p>
+        {/* Member draggable cards */}
+        <DraggableCardContainer className="relative mt-16 min-h-[28rem] w-full">
+          {[
+            {
+              name: "Ana Gutierrez",
+              role: "Frontend Dev · Cochabamba",
+              quote: "Conseguí mi primer cliente internacional a los 3 meses de unirme.",
+              img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+              className: "absolute top-4 left-[8%] rotate-[-4deg]",
+            },
+            {
+              name: "Carlos Mamani",
+              role: "Full Stack · La Paz",
+              quote: "El network me abrió puertas que no sabía que existían.",
+              img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+              className: "absolute top-16 left-[28%] rotate-[5deg]",
+            },
+            {
+              name: "Valeria Torrez",
+              role: "Product Designer · Santa Cruz",
+              quote: "Las masterclasses semanales cambiaron mi nivel completamente.",
+              img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
+              className: "absolute top-2 left-[50%] rotate-[-6deg]",
+            },
+            {
+              name: "Diego Flores",
+              role: "Backend Dev · Sucre",
+              quote: "Pasé de freelancer local a trabajar con equipos en Europa.",
+              img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+              className: "absolute top-20 left-[68%] rotate-[4deg]",
+            },
+          ].map((member) => (
+            <DraggableCardBody key={member.name} className={member.className}>
+              <img
+                src={member.img}
+                alt={member.name}
+                className="pointer-events-none relative z-10 h-48 w-full rounded-xl object-cover"
+              />
+              <div className="mt-4">
+                <p className="text-sm font-bold text-neutral-800">{member.name}</p>
+                <p className="text-xs text-neutral-500 mb-2">{member.role}</p>
+                <p className="text-sm italic text-neutral-600">"{member.quote}"</p>
               </div>
-            ))}
-          </div>
-        </div>
+            </DraggableCardBody>
+          ))}
+        </DraggableCardContainer>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
