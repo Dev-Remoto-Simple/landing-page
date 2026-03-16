@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import dynamic from "next/dynamic";
+import UnicornScene from "unicornstudio-react/next";
 import { motion } from "framer-motion";
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
 import { BackgroundBeams } from "@/components/ui/background-beams";
@@ -14,15 +14,6 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-w
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Vortex } from "@/components/ui/vortex";
 import { MessageCircle, Globe2, Home as HomeIcon, Users, Calendar } from "lucide-react";
-
-const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center animate-pulse bg-slate-50 rounded-full">
-      <div className="w-32 h-32 rounded-full border-2 border-dashed border-blue-200" />
-    </div>
-  ),
-});
 
 // ── Brand tokens (from colors.md + screenshots) ───────────────────────────────
 const BG      = "#021E43"; // hero, about, footer
@@ -87,51 +78,16 @@ export default function Home() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // Load Unicorn Studio SDK and init scene only on the hero element
-  useEffect(() => {
-    let scene: any = null;
-    const SDK_URL = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js";
-
-    const initScene = async () => {
-      const US = (window as any).UnicornStudio;
-      if (!US) return;
-      scene = await US.addScene({
-        elementId: "unicorn-hero",
-        projectId: "vVUEJx71ofSTVB8IjTSt",
-        scale: 1,
-        dpi: 1.5,
-        fps: 60,
-        lazyLoad: false,
-      });
-    };
-
-    if ((window as any).UnicornStudio) {
-      initScene();
-    } else {
-      const s = document.createElement("script");
-      s.src = SDK_URL;
-      s.onload = () => initScene();
-      document.head.appendChild(s);
-    }
-
-    return () => { scene?.destroy(); };
-  }, []);
-
-  // Strip Unicorn Studio watermark — CSS fires synchronously, observer handles late injections
+  // Strip Unicorn Studio watermark
   useEffect(() => {
     const style = document.createElement("style");
     style.textContent = `a[href*="unicorn.studio"], [class*="unicorn-badge"], [id*="unicorn-badge"] { display: none !important; }`;
     document.head.appendChild(style);
-
     const observer = new MutationObserver(() => {
       document.querySelectorAll('a[href*="unicorn.studio"]').forEach(el => el.remove());
     });
     observer.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      observer.disconnect();
-      style.remove();
-    };
+    return () => { observer.disconnect(); style.remove(); };
   }, []);
 
 
@@ -179,7 +135,14 @@ export default function Home() {
         style={{ backgroundColor: BG, paddingBottom: "72px", overflow: "visible" }}
       >
         {/* Unicorn Studio WebGL background */}
-        <div id="unicorn-hero" className="pointer-events-none absolute inset-0" style={{ width: "100%", height: "100%" }} />
+        <div className="pointer-events-none absolute inset-0" style={{ width: "100%", height: "100%" }}>
+          <UnicornScene
+            projectId="xmLNahDvbQYSdqYWiluJ"
+            sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js"
+            width="100%"
+            height="100%"
+          />
+        </div>
 
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Hero logo — larger size */}
@@ -237,131 +200,91 @@ export default function Home() {
       <section
         id="comunidad"
         className="relative overflow-hidden px-6 pb-24 pt-32 lg:pt-44"
-        style={{
-          backgroundColor: "#FFFFFF",
-          backgroundImage: `radial-gradient(circle at 15% 50%, #f0f9ff 0%, #ffffff 70%)`,
-        }}
+        style={{ backgroundColor: "#FFFFFF" }}
       >
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-20">
+        {/* ASCII / code texture background */}
+        <motion.div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: "url('/background2.png'), url('/ascii-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.7,
+          }}
+          animate={{ scale: [1, 1.04, 1], x: [0, 8, -8, 0], y: [0, -6, 6, 0] }}
+          transition={{ duration: 18, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+        />
 
-            {/* Globe — shrunk ~15%, left column */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative w-full max-w-[420px] aspect-square flex-shrink-0 lg:w-[38%] lg:max-w-none"
-            >
-              <div className="absolute inset-0 bg-blue-400/5 blur-[100px] rounded-full" />
-              <div className="relative w-full h-full">
-                <World
-                  globeConfig={{
-                    pointSize: 4,
-                    globeColor: "#062056",
-                    showAtmosphere: true,
-                    atmosphereColor: CYAN,
-                    atmosphereAltitude: 0.15,
-                    emissive: "#062056",
-                    emissiveIntensity: 0.1,
-                    shininess: 0.9,
-                    polygonColor: "rgba(255,255,255,0.7)",
-                    ambientLight: "#38bdf8",
-                    directionalLeftLight: "#ffffff",
-                    directionalTopLight: "#ffffff",
-                    pointLight: "#ffffff",
-                    arcTime: 2000,
-                    arcLength: 0.9,
-                    rings: 2,
-                    maxRings: 4,
-                    autoRotate: true,
-                    autoRotateSpeed: 0.4,
-                  }}
-                  data={[
-                    { order: 1, startLat: -16.5, startLng: -68.15, endLat: 37.7749, endLng: -122.4194, arcAlt: 0.5, color: CYAN },
-                    { order: 2, startLat: -16.5, startLng: -68.15, endLat: 40.7128, endLng: -74.006,   arcAlt: 0.4, color: "#3b82f6" },
-                    { order: 3, startLat: -16.5, startLng: -68.15, endLat: 51.5074, endLng: -0.1278,   arcAlt: 0.7, color: CYAN },
-                    { order: 4, startLat: -16.5, startLng: -68.15, endLat: 35.6762, endLng: 139.6503,  arcAlt: 0.8, color: "#6366f1" },
-                    { order: 5, startLat: -16.5, startLng: -68.15, endLat: -33.8688, endLng: 151.2093, arcAlt: 0.6, color: CYAN },
-                    { order: 6, startLat: -16.5, startLng: -68.15, endLat: 25.2048, endLng: 55.2708,   arcAlt: 0.5, color: "#3b82f6" },
-                    { order: 7, startLat: -16.5, startLng: -68.15, endLat: 48.8566, endLng: 2.3522,    arcAlt: 0.4, color: "#6366f1" },
-                    { order: 8, startLat: -16.5, startLng: -68.15, endLat: -23.5505, endLng: -46.6333, arcAlt: 0.2, color: CYAN },
-                  ]}
-                />
-              </div>
-            </motion.div>
+        {/* Subtle radial glow — top center */}
+        <div
+          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full"
+          style={{ background: `radial-gradient(ellipse at center, ${CYAN}18 0%, transparent 70%)` }}
+        />
 
-            {/* Text + cards — right column */}
-            <div className="flex-1 text-center lg:text-left z-20">
+        <div className="relative z-10 mx-auto max-w-5xl text-center">
 
-              {/* Heading — reveals first */}
+          {/* Heading */}
+          <motion.h2
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl leading-snug"
+            style={{ color: BRAND, fontFamily: fH }}
+          >
+            En el mundo de hoy no existen barreras.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            className="mt-5 text-lg leading-relaxed underline underline-offset-4 decoration-1"
+            style={{ color: "#4A5A72" }}
+          >
+            Por eso sabemos que podemos competir{" "}
+            <strong style={{ color: BRAND }}>a nivel global.</strong>
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.18, ease: "easeOut" }}
+            className="mt-4 text-xl font-medium"
+            style={{ color: "#4A5A72", fontFamily: fH }}
+          >
+            Por eso, <strong style={{ color: BRAND }}>nuestro propósito es:</strong>
+          </motion.p>
+
+          {/* 4 horizontal cards */}
+          <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {purposes.map(({ icon, title, desc }, i) => (
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
+                key={i}
+                initial={{ opacity: 0, y: 36 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: 0.12 * i, ease: "easeOut" }}
+                whileHover={{ y: -6, boxShadow: `0 24px 48px rgba(19,77,145,0.35), 0 0 0 1px ${CYAN}44` }}
+                className="flex flex-col items-start rounded-2xl p-5 text-left cursor-default"
+                style={{ backgroundColor: BRAND, transition: "background 0.3s ease" }}
               >
-                <h2
-                  className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl leading-snug"
-                  style={{ color: BRAND, fontFamily: fH }}
-                >
-                  En el mundo de hoy no existen barreras.
-                </h2>
-                <p className="mt-5 text-lg leading-relaxed" style={{ color: "#4A5A72" }}>
-                  Por eso sabemos que podemos competir{" "}
-                  <strong style={{ color: BRAND, textShadow: `0 0 20px ${CYAN}55` }}>a nivel global.</strong>
-                </p>
-                <p className="mt-3 text-base" style={{ color: "#4A5A72" }}>
-                  Por eso, <strong style={{ color: BRAND }}>nuestro propósito es:</strong>
+                {/* Star marker */}
+                <span className="mb-3 text-xs font-bold" style={{ color: `${CYAN}99` }}>✦</span>
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
+                  <Image src={icon} alt={title} width={40} height={40} className="object-contain" />
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.92)", fontFamily: fB }}>
+                  <strong style={{ color: "#ffffff", fontFamily: fH }}>{title} </strong>
+                  {desc}
                 </p>
               </motion.div>
-
-              {/* Cards — staggered slide-up */}
-              <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {purposes.map(({ icon, title, desc }, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 32 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.5, delay: 0.15 * i, ease: "easeOut" }}
-                    className="group relative flex flex-col items-start rounded-2xl p-6 cursor-pointer border border-slate-100 bg-white"
-                    style={{ transition: "all 0.35s ease" }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
-                      (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 40px rgba(19,77,145,0.12), 0 0 0 1px rgba(116,250,253,0.25)`;
-                      (e.currentTarget as HTMLElement).style.background = "rgba(240,249,255,0.7)";
-                      (e.currentTarget as HTMLElement).style.backdropFilter = "blur(8px)";
-                      (e.currentTarget as HTMLElement).style.borderColor = `${CYAN}55`;
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                      (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                      (e.currentTarget as HTMLElement).style.background = "#ffffff";
-                      (e.currentTarget as HTMLElement).style.backdropFilter = "none";
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgb(241 245 249)";
-                    }}
-                  >
-                    {/* Top accent bar on hover */}
-                    <div
-                      className="absolute top-0 left-6 right-6 h-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ backgroundColor: CYAN }}
-                    />
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-blue-50 transition-colors duration-300">
-                      <Image src={icon} alt={title} width={36} height={36} className="object-contain" />
-                    </div>
-                    <h3 className="mb-1 text-base font-bold" style={{ color: BRAND, fontFamily: fH }}>
-                      {title}
-                    </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
-                      {desc}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-
-            </div>
+            ))}
           </div>
+
         </div>
       </section>
       {/* ══════════════════════════════════════════════════════════════════════
