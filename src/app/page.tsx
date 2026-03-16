@@ -206,7 +206,7 @@ export default function Home() {
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundImage: "url('/background2.png'), url('/ascii-bg.png')",
+            backgroundImage: "url('/background2.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.7,
@@ -416,7 +416,7 @@ export default function Home() {
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundImage: "url('/ascii-bg.png')",
+            backgroundImage: "url('/background2.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.06,
