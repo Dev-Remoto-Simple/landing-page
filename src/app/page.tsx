@@ -156,30 +156,29 @@ export default function Home() {
             <strong>puedes crear </strong>
             <strong style={{ color: CYAN }}>cosas globales.</strong>
           </h1>
+
+          {/* ÚNETE button */}
+          <a
+            href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-10 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
+            style={{
+              display: "inline-block",
+              borderRadius: "9999px",
+              backgroundColor: BRAND,
+              color: "#fff",
+              fontFamily: fH,
+              fontWeight: 700,
+              fontSize: "2rem",
+              letterSpacing: "0.18em",
+              padding: "28px 72px",
+              boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
+            }}
+          >
+            ÚNETE
+          </a>
         </div>
-
-        {/* ÚNETE button */}
-        <a
-          href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-10 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
-          style={{
-            display: "inline-block",
-            borderRadius: "9999px",
-            backgroundColor: BRAND,
-            color: "#fff",
-            fontFamily: fH,
-            fontWeight: 700,
-            fontSize: "2rem",
-            letterSpacing: "0.18em",
-            padding: "28px 72px",
-            boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
-          }}
-        >
-          ÚNETE
-        </a>
-
 
       </section>
 
