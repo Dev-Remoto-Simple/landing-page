@@ -170,9 +170,9 @@ export default function Home() {
               color: "#fff",
               fontFamily: fH,
               fontWeight: 700,
-              fontSize: "2rem",
+              fontSize: "1.14rem",
               letterSpacing: "0.18em",
-              padding: "28px 72px",
+              padding: "21px 62px",
               boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
             }}
           >
