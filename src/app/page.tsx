@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import UnicornScene from "unicornstudio-react/next";
 import { motion } from "framer-motion";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
@@ -133,6 +133,7 @@ export default function Home() {
         className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24"
         style={{ backgroundColor: BG, paddingBottom: "72px", overflow: "visible" }}
       >
+        <BackgroundBeams />
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Hero logo — larger size */}
           <Image
@@ -281,14 +282,6 @@ export default function Home() {
           Background: #0C3F78, white text, cyan accent
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative px-6 py-24 overflow-hidden" style={{ backgroundColor: MID }}>
-        <div className="pointer-events-none absolute inset-0" style={{ width: "100%", height: "100%" }}>
-          <UnicornScene
-            projectId="xmLNahDvbQYSdqYWiluJ"
-            sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.4/dist/unicornStudio.umd.js"
-            width="100%"
-            height="100%"
-          />
-        </div>
         {/* Stats */}
         <div className="mx-auto max-w-3xl text-center" ref={statsRef}>
           <div
