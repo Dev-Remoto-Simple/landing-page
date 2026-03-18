@@ -7,7 +7,6 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { ShinyButton } from "@/components/ui/shiny-button";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { SparklesCore } from "@/components/ui/sparkles";
@@ -69,7 +68,7 @@ const fB = "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif";
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const { ref: statsRef, inView: statsInView } = useInView();
-  const count = useCounter(3000, 2200, statsInView);
+  const count = useCounter(1000, 2200, statsInView);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 30);
@@ -130,8 +129,8 @@ export default function Home() {
           Ends with ÚNETE button that overlaps into screen 2
       ══════════════════════════════════════════════════════════════════════ */}
       <section
-        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24"
-        style={{ backgroundColor: BG, paddingBottom: "72px", overflow: "visible" }}
+        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16"
+        style={{ backgroundColor: BG, overflow: "visible" }}
       >
         <BackgroundBeams />
         <div className="relative z-10 flex flex-col items-center text-center">
@@ -159,15 +158,13 @@ export default function Home() {
           </h1>
         </div>
 
-
-        {/* ÚNETE — straddles hero + purpose (overlaps downward) */}
+        {/* ÚNETE button */}
         <a
-          href="#comunidad"
-          className="absolute left-1/2 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
+          href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-10 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
           style={{
-            bottom: "-28px",
-            transform: "translateX(-50%)",
-            zIndex: 10000,
             display: "inline-block",
             borderRadius: "9999px",
             backgroundColor: BRAND,
@@ -182,6 +179,8 @@ export default function Home() {
         >
           ÚNETE
         </a>
+
+
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -189,7 +188,7 @@ export default function Home() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="comunidad"
-        className="relative overflow-hidden px-6 pb-24 pt-32 lg:pt-44"
+        className="relative overflow-hidden px-6 pb-24 pt-16 lg:pt-20"
         style={{ backgroundColor: "#FFFFFF" }}
       >
         {/* ASCII / code texture background */}
@@ -288,7 +287,7 @@ export default function Home() {
             className="text-[6rem] font-bold leading-none sm:text-[8rem] md:text-[10rem]"
             style={{ color: CYAN, fontFamily: fH }}
           >
-            {count.toLocaleString()}
+            <span>+</span><span>{count.toLocaleString()}</span>
           </div>
           <p className="mt-6 text-xl font-bold text-white sm:text-2xl" style={{ fontFamily: fH }}>
             Personas de todos los perfiles tienen algo en común:
@@ -369,7 +368,9 @@ export default function Home() {
             </p>
             <div className="mt-8 flex justify-center">
               <a
-                href="#"
+                href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg"
                 style={{
                   borderRadius: "9999px",
@@ -394,12 +395,11 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 4 (bottom) — EMPRESAS
           Background: white + ascii bg at low opacity
-          Ends with CONOCE MÁS button overlapping into about
       ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="empresas"
-        className="relative overflow-visible px-6 pb-20 text-center"
-        style={{ backgroundColor: "#FFFFFF", paddingTop: "64px" }}
+        className="relative overflow-hidden px-6 pb-20 pt-16 text-center"
+        style={{ backgroundColor: "#FFFFFF" }}
       >
         {/* ASCII background */}
         <div
@@ -432,43 +432,61 @@ export default function Home() {
             duration={0.3}
             style={{ color: BRAND } as any}
           />
-        </div>
 
-        {/* CONOCE MÁS — straddles empresas + about */}
-        <div
-          className="absolute left-1/2"
-          style={{ bottom: "-28px", transform: "translateX(-50%)", zIndex: 20 }}
-        >
-          <ShinyButton
-            onClick={() => { window.location.href = "#nosotros"; }}
-            className="cursor-pointer"
-            style={{
-              "--shine-color": "#fff",
-              backgroundColor: BRAND,
-              color: "#fff",
-              fontFamily: fH,
-              fontWeight: 700,
-              fontSize: "0.875rem",
-              letterSpacing: "0.18em",
-              padding: "14px 44px",
-              boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
-              whiteSpace: "nowrap",
-            } as any}
-          >
-            CONOCE MÁS
-          </ShinyButton>
+          {/* Logo carousel */}
+          <div className="mt-12 overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)" }}>
+            <motion.div
+              className="flex gap-16 items-center whitespace-nowrap"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
+            >
+              {/* First set of logos */}
+              {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
+                <div key={`${name}-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
+                  {name}
+                </div>
+              ))}
+              {/* Duplicate for seamless loop */}
+              {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
+                <div key={`${name}-dup-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
+                  {name}
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* CONOCE MÁS button */}
+          <div className="mt-12">
+            <a
+              href="#nosotros"
+              className="cursor-pointer"
+              style={{
+                display: "inline-block",
+                borderRadius: "9999px",
+                backgroundColor: BRAND,
+                color: "#fff",
+                fontFamily: fH,
+                fontWeight: 700,
+                fontSize: "0.875rem",
+                letterSpacing: "0.18em",
+                padding: "14px 44px",
+                boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
+              }}
+            >
+              CONOCE MÁS
+            </a>
+          </div>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 5 (top) — SOBRE NOSOTROS
           Background: #021E43 + circles bg
-          Top padding accommodates CONOCE MÁS overlap
       ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="nosotros"
-        className="relative overflow-hidden px-6 pb-24 text-center"
-        style={{ backgroundColor: BG, paddingTop: "80px" }}
+        className="relative overflow-hidden px-6 pb-24 pt-20 text-center"
+        style={{ backgroundColor: BG }}
       >
         {/* Circles background — bottom center */}
         <div
@@ -537,7 +555,9 @@ export default function Home() {
             You can build <span style={{ color: CYAN }}>global</span> things.
           </h3>
           <a
-            href="#comunidad"
+            href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
             style={{
               borderRadius: "9999px",
