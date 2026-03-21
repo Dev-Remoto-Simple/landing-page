@@ -131,12 +131,12 @@
 
 /* Dev Remoto Simple brand colors */
 :root {
-  --drs-green-darkest: #021A09;
-  --drs-green-dark: #031D0B;
-  --drs-green: #041F0E;
-  --drs-green-card: #0A3D1E;
-  --drs-accent: #4ADE80;
-  --drs-accent-glow: rgba(74, 222, 128, 0.3);
+  --drs-navy-darkest: #060C18;
+  --drs-navy-dark: #070E1B;
+  --drs-navy: #0B1528;
+  --drs-navy-card: #0F2040;
+  --drs-cyan: #00C8D9;
+  --drs-cyan-glow: rgba(0, 200, 217, 0.3);
 }
 
 /* Hide Unicorn Studio watermark (fixed-position badge injected by the SDK) */

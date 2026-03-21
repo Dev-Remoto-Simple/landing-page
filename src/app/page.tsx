@@ -13,11 +13,11 @@ import { SparklesCore } from "@/components/ui/sparkles";
 import { Vortex } from "@/components/ui/vortex";
 import { MessageCircle, Globe2, Home as HomeIcon, Users, Calendar } from "lucide-react";
 
-// ── Brand tokens (forest green palette) ────────────────────────────────────────
-const BG      = "#041F0E"; // hero, about, footer
-const MID     = "#0A3D1E"; // stats+members section, events card
-const BRAND   = "#145A2E"; // buttons, purpose cards, empresas text
-const CYAN    = "#4ADE80"; // accent highlights
+// ── Brand tokens (from colors.md + screenshots) ───────────────────────────────
+const BG      = "#021E43"; // hero, about, footer
+const MID     = "#0C3F78"; // stats+members section, events card
+const BRAND   = "#134D91"; // buttons, purpose cards, empresas text
+const CYAN    = "#74FAFD"; // accent highlights
 
 // ── Purpose cards ─────────────────────────────────────────────────────────────
 const purposes = [
@@ -126,6 +126,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 1 — HERO
           Background: #021E43, dot grid overlay
+          Ends with ÚNETE button that overlaps into screen 2
       ══════════════════════════════════════════════════════════════════════ */}
       <section
         className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16"
@@ -172,7 +173,7 @@ export default function Home() {
               fontSize: "1.14rem",
               letterSpacing: "0.18em",
               padding: "21px 62px",
-              boxShadow: `0 4px 24px rgba(20,90,46,0.5)`,
+              boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
             }}
           >
             ÚNETE
@@ -254,7 +255,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.55, delay: 0.12 * i, ease: "easeOut" }}
-                whileHover={{ y: -6, boxShadow: `0 24px 48px rgba(20,90,46,0.35), 0 0 0 1px ${CYAN}44` }}
+                whileHover={{ y: -6, boxShadow: `0 24px 48px rgba(19,77,145,0.35), 0 0 0 1px ${CYAN}44` }}
                 className="flex flex-col items-start rounded-2xl p-5 text-left cursor-default"
                 style={{ backgroundColor: BRAND, transition: "background 0.3s ease" }}
               >
@@ -468,7 +469,7 @@ export default function Home() {
                 fontSize: "0.875rem",
                 letterSpacing: "0.18em",
                 padding: "14px 44px",
-                boxShadow: `0 4px 24px rgba(20,90,46,0.45)`,
+                boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
               }}
             >
               CONOCE MÁS
@@ -566,7 +567,7 @@ export default function Home() {
               fontSize: "0.875rem",
               letterSpacing: "0.2em",
               padding: "16px 48px",
-              boxShadow: `0 4px 24px rgba(20,90,46,0.5), 0 0 40px ${CYAN}22`,
+              boxShadow: `0 4px 24px rgba(19,77,145,0.5), 0 0 40px ${CYAN}22`,
             }}
           >
             ÚNETE AHORA
