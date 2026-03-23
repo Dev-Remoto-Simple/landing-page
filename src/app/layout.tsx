@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -19,6 +18,18 @@ export const metadata: Metadata = {
   title: "Dev Remoto Simple",
   description:
     "Comunidad tech en Bolivia. No importa quién eres ni de dónde vengas, tú también puedes crear cosas globales.",
+  openGraph: {
+    title: "Dev Remoto Simple",
+    description: "La comunidad tech de los que pensamos en grande.",
+    siteName: "Dev Remoto Simple",
+    locale: "es_BO",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dev Remoto Simple",
+    description: "La comunidad tech de los que pensamos en grande.",
+  },
 };
 
 export default function RootLayout({
@@ -27,13 +38,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es">
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${dmSans.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

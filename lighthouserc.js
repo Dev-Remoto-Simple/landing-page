@@ -1,0 +1,25 @@
+module.exports = {
+  ci: {
+    collect: {
+      startServerCommand: "npm run build && npm start",
+      startServerReadyPattern: "Ready",
+      url: ["http://localhost:3000"],
+      numberOfRuns: 3,
+      settings: {
+        preset: "desktop",
+      },
+    },
+    assert: {
+      assertions: {
+        "categories:performance": ["warn", { minScore: 0.7 }],
+        "categories:accessibility": ["warn", { minScore: 0.8 }],
+        "categories:best-practices": ["warn", { minScore: 0.8 }],
+        "categories:seo": ["warn", { minScore: 0.8 }],
+      },
+    },
+    upload: {
+      target: "filesystem",
+      outputDir: ".lighthouseci",
+    },
+  },
+};

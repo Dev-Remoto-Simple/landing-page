@@ -2,16 +2,23 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { BackgroundBeams } from "@/components/ui/background-beams";
-import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { FloatingDock } from "@/components/ui/floating-dock";
-import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
-import { SparklesCore } from "@/components/ui/sparkles";
-import { Vortex } from "@/components/ui/vortex";
 import { MessageCircle, Globe2, Home as HomeIcon, Users, Calendar } from "lucide-react";
+
+// Dynamic imports — loaded after hydration, reduces initial JS bundle
+const BackgroundBeams = dynamic(
+  () => import("@/components/ui/background-beams").then(m => ({ default: m.BackgroundBeams })),
+  { ssr: false }
+);
+const TextGenerateEffect = dynamic(
+  () => import("@/components/ui/text-generate-effect").then(m => ({ default: m.TextGenerateEffect })),
+  { ssr: false }
+);
+const FloatingDock = dynamic(
+  () => import("@/components/ui/floating-dock").then(m => ({ default: m.FloatingDock })),
+  { ssr: false }
+);
 
 // ── Brand tokens (from colors.md + screenshots) ───────────────────────────────
 const BG      = "#021E43"; // hero, about, footer
@@ -67,13 +74,47 @@ const fB = "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif";
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const [eventIdx, setEventIdx] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
+  const sectionRefs = useRef<HTMLElement[]>([]);
+  const SECTION_COUNT = 6;
+  const events = [
+    { img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop", caption: "Masterclass mensual · La Paz" },
+    { img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=500&fit=crop", caption: "Building session · Cochabamba" },
+    { img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&h=500&fit=crop", caption: "Networking presencial · Santa Cruz" },
+    { img: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=500&fit=crop", caption: "Demo Day · La Paz" },
+    { img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop", caption: "Práctica de inglés · Online" },
+    { img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&h=500&fit=crop", caption: "Workshop de producto · Santa Cruz" },
+  ];
   const { ref: statsRef, inView: statsInView } = useInView();
   const count = useCounter(1000, 2200, statsInView);
 
+  // Combined scroll handler — rAF throttled
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 30);
+        const refs = sectionRefs.current.filter(Boolean);
+        if (refs.length > 0) {
+          const mid = window.innerHeight / 2;
+          let best = 0;
+          refs.forEach((el, i) => {
+            if (el.getBoundingClientRect().top <= mid) best = i;
+          });
+          setActiveSection(best);
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const t = setTimeout(onScroll, 100);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(t);
+    };
   }, []);
 
   // Strip Unicorn Studio watermark
@@ -106,20 +147,26 @@ export default function Home() {
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6">
           <Image src="/logo.svg" alt="Dev Remoto Simple" width={140} height={29} priority />
-          <div className="flex items-center gap-8">
-            {(["Comunidad", "Empresa"] as const).map((label, i) => (
-              <a
-                key={label}
-                href={i === 0 ? "#comunidad" : "#empresas"}
-                className="text-sm font-medium cursor-pointer transition-colors duration-200"
-                style={{ color: "rgba(255,255,255,0.75)" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
+          <a
+            href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
+            style={{
+              display: "inline-block",
+              borderRadius: "9999px",
+              backgroundColor: BRAND,
+              color: "#fff",
+              fontFamily: fH,
+              fontWeight: 700,
+              fontSize: "0.8rem",
+              letterSpacing: "0.18em",
+              padding: "10px 28px",
+              boxShadow: `0 4px 24px rgba(19,77,145,0.5)`,
+            }}
+          >
+            ÚNETE
+          </a>
         </div>
       </nav>
 
@@ -129,33 +176,29 @@ export default function Home() {
           Ends with ÚNETE button that overlaps into screen 2
       ══════════════════════════════════════════════════════════════════════ */}
       <section
-        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16"
+        ref={(el) => { if (el) sectionRefs.current[0] = el; }}
+        className="relative flex min-h-screen flex-col items-center px-6 pt-24 pb-4"
         style={{ backgroundColor: BG, overflow: "visible" }}
       >
         <BackgroundBeams />
-        <div className="relative z-10 flex flex-col items-center text-center">
-          {/* Hero logo — larger size */}
-          <Image
-            src="/logo.svg"
-            alt="Dev Remoto Simple"
-            width={340}
-            height={69}
-            priority
-            className="mb-10"
-          />
 
+        {/* Center content grows to fill available space */}
+        <div className="relative z-10 flex flex-grow flex-col items-center justify-center text-center">
           {/* Headline */}
           <h1
-            className="max-w-2xl text-3xl font-bold leading-snug text-white sm:text-4xl"
+            className="max-w-2xl text-4xl font-bold leading-snug text-white sm:text-5xl lg:text-6xl"
             style={{ fontFamily: fH }}
           >
-            <strong>No importa quién eres</strong>{" "}
-            <span className="font-normal">ni de dónde vengas,</span>
+            <strong>La comunidad tech</strong>{" "}
+            <strong>de los que pensamos</strong>{" "}
             <br />
-            <span className="font-normal">tú también </span>
-            <strong>puedes crear </strong>
-            <strong style={{ color: CYAN }}>cosas globales.</strong>
+
+            <strong style={{ color: CYAN }}>EN GRANDE</strong>
           </h1>
+
+          <p className="mt-6 max-w-xl text-lg sm:text-xl text-white/70">
+            Conectamos al talento más ambicioso con las empresas más ambiciosas.
+          </p>
 
           {/* ÚNETE button */}
           <a
@@ -180,14 +223,163 @@ export default function Home() {
           </a>
         </div>
 
+        {/* Carousel — pinned to bottom via normal flow */}
+        <div className="relative z-10 w-full max-w-3xl text-center">
+          <p
+            className="mb-4 text-sm tracking-widest uppercase text-white/40"
+            style={{ fontFamily: fH }}
+          >
+            Hemos colaborado con:
+          </p>
+          <div
+            className="overflow-hidden"
+            style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}
+          >
+            <motion.div
+              className="flex gap-16 items-center whitespace-nowrap"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 22 }}
+            >
+              {["Node.js", "Google", "Facebook", "Vercel", "AWS", "Microsoft", "Stripe", "Notion", "Apple"].map((name, i) => (
+                <div
+                  key={`${name}-${i}`}
+                  className="flex-shrink-0"
+                  style={{
+                    color: "#ffffff",
+                    fontFamily: fH,
+                    fontWeight: 700,
+                    fontSize: "1.5rem",
+                    opacity: 0.25,
+                  }}
+                >
+                  {name}
+                </div>
+              ))}
+              {["Node.js", "Google", "Facebook", "Vercel", "AWS", "Microsoft", "Stripe", "Notion", "Apple"].map((name, i) => (
+                <div
+                  key={`dup-${name}-${i}`}
+                  className="flex-shrink-0"
+                  style={{
+                    color: "#ffffff",
+                    fontFamily: fH,
+                    fontWeight: 700,
+                    fontSize: "1.5rem",
+                    opacity: 0.25,
+                  }}
+                >
+                  {name}
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          SCREEN 4 (top) — EVENTOS RECIENTES
+          Background: white, cards with MID footer strip
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section
+        ref={(el) => { if (el) sectionRefs.current[1] = el; }}
+        className="relative flex min-h-screen flex-col justify-center px-6 py-20"
+        style={{ backgroundColor: "#FFFFFF" }}
+      >
+        <div className="mx-auto w-full max-w-6xl">
+
+          {/* Header row */}
+          <div className="flex items-center justify-between mb-10">
+            <h2
+              className="text-4xl font-bold sm:text-5xl"
+              style={{ color: BRAND, fontFamily: fH }}
+            >
+              Eventos recientes
+            </h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setEventIdx(i => Math.max(i - 1, 0))}
+                disabled={eventIdx === 0}
+                className="flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 disabled:opacity-30"
+                style={{
+                  border: `2px solid ${BRAND}`,
+                  color: BRAND,
+                  backgroundColor: "transparent",
+                  cursor: eventIdx === 0 ? "default" : "pointer",
+                }}
+                onMouseEnter={e => { if (eventIdx > 0) { (e.currentTarget as HTMLButtonElement).style.backgroundColor = BRAND; (e.currentTarget as HTMLButtonElement).style.color = "#fff"; } }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = BRAND; }}
+                aria-label="Anterior"
+              >
+                ◀
+              </button>
+              <button
+                onClick={() => setEventIdx(i => Math.min(i + 1, events.length - 1))}
+                disabled={eventIdx === events.length - 1}
+                className="flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 disabled:opacity-30"
+                style={{
+                  border: `2px solid ${BRAND}`,
+                  color: BRAND,
+                  backgroundColor: "transparent",
+                  cursor: eventIdx === events.length - 1 ? "default" : "pointer",
+                }}
+                onMouseEnter={e => { if (eventIdx < events.length - 1) { (e.currentTarget as HTMLButtonElement).style.backgroundColor = BRAND; (e.currentTarget as HTMLButtonElement).style.color = "#fff"; } }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = BRAND; }}
+                aria-label="Siguiente"
+              >
+                ▶
+              </button>
+            </div>
+          </div>
+
+          {/* Carousel track */}
+          <div style={{ overflow: "hidden" }}>
+            <motion.div
+              className="flex gap-5"
+              animate={{ x: `calc(-${eventIdx} * (32rem + 1.25rem))` }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {events.map((ev, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 rounded-2xl overflow-hidden"
+                  style={{ width: "min(32rem, calc(100vw - 3rem))", boxShadow: "0 4px 24px rgba(12,63,120,0.12)" }}
+                >
+                  {/* Square image using aspect-ratio */}
+                  <div style={{ aspectRatio: "1 / 1", width: "100%", overflow: "hidden", position: "relative" }}>
+                    <Image
+                      src={ev.img}
+                      alt={ev.caption}
+                      fill
+                      sizes="(max-width: 640px) calc(100vw - 3rem), 512px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div
+                    className="px-5 py-4"
+                    style={{ backgroundColor: MID }}
+                  >
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "rgba(255,255,255,0.9)", fontFamily: fB }}
+                    >
+                      {ev.caption}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 2 — PURPOSE
       ══════════════════════════════════════════════════════════════════════ */}
       <section
+        ref={(el) => { if (el) sectionRefs.current[2] = el; }}
         id="comunidad"
-        className="relative overflow-hidden px-6 pb-24 pt-16 lg:pt-20"
+        className="relative overflow-hidden flex min-h-screen flex-col justify-center px-6 py-20"
         style={{ backgroundColor: "#FFFFFF" }}
       >
         {/* ASCII / code texture background */}
@@ -198,9 +390,11 @@ export default function Home() {
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.7,
+            maskImage: "linear-gradient(to bottom, transparent 0%, black 40%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 40%)",
           }}
-          animate={{ scale: [1, 1.04, 1], x: [0, 8, -8, 0], y: [0, -6, 6, 0] }}
-          transition={{ duration: 18, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+          animate={{ scale: [1, 1.06, 1], x: [0, 12, -12, 0], y: [0, -9, 9, 0] }}
+          transition={{ duration: 13, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
         />
 
         {/* Subtle radial glow — top center */}
@@ -209,7 +403,7 @@ export default function Home() {
           style={{ background: `radial-gradient(ellipse at center, ${CYAN}18 0%, transparent 70%)` }}
         />
 
-        <div className="relative z-10 mx-auto max-w-5xl text-center">
+        <div className="relative z-10 mx-auto max-w-6xl text-center">
 
           {/* Heading */}
           <motion.h2
@@ -217,37 +411,14 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl leading-snug"
+            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-snug"
             style={{ color: BRAND, fontFamily: fH }}
           >
-            En el mundo de hoy no existen barreras.
+            Nuestro propósito es:
           </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-            className="mt-5 text-lg leading-relaxed underline underline-offset-4 decoration-1"
-            style={{ color: "#4A5A72" }}
-          >
-            Por eso sabemos que podemos competir{" "}
-            <strong style={{ color: BRAND }}>a nivel global.</strong>
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.18, ease: "easeOut" }}
-            className="mt-4 text-xl font-medium"
-            style={{ color: "#4A5A72", fontFamily: fH }}
-          >
-            Por eso, <strong style={{ color: BRAND }}>nuestro propósito es:</strong>
-          </motion.p>
-
-          {/* 4 horizontal cards */}
-          <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {/* 4-column cards */}
+          <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4 items-stretch">
             {purposes.map(({ icon, title, desc }, i) => (
               <motion.div
                 key={i}
@@ -256,19 +427,18 @@ export default function Home() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.55, delay: 0.12 * i, ease: "easeOut" }}
                 whileHover={{ y: -6, boxShadow: `0 24px 48px rgba(19,77,145,0.35), 0 0 0 1px ${CYAN}44` }}
-                className="flex flex-col items-start rounded-2xl p-5 text-left cursor-default"
-                style={{ backgroundColor: BRAND, transition: "background 0.3s ease" }}
+                className="flex flex-col items-start rounded-2xl px-5 py-10 text-left cursor-default h-full"
+                style={{ backgroundColor: BRAND, transition: "background 0.3s ease", minHeight: "360px" }}
               >
-                {/* Star marker */}
-                <span className="mb-3 text-xs font-bold" style={{ color: `${CYAN}99` }}>✦</span>
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
+                <span className="mb-4 text-sm font-bold" style={{ color: `${CYAN}99` }}>✦</span>
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl self-center"
                   style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
-                  <Image src={icon} alt={title} width={40} height={40} className="object-contain" />
+                  <Image src={icon} alt={title} width={48} height={48} className="object-contain" />
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.92)", fontFamily: fB }}>
-                  <strong style={{ color: "#ffffff", fontFamily: fH }}>{title} </strong>
-                  {desc}
-                </p>
+                <div className="w-full">
+                  <strong className="text-2xl block mb-3 text-center" style={{ color: "#ffffff", fontFamily: fH }}>{title}</strong>
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.85)", fontFamily: fB }}>{desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -279,7 +449,7 @@ export default function Home() {
           SCREEN 3 — STATS + MEMBERS
           Background: #0C3F78, white text, cyan accent
       ══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative px-6 py-24 overflow-hidden" style={{ backgroundColor: MID }}>
+      <section ref={(el) => { if (el) sectionRefs.current[3] = el; }} className="relative flex min-h-screen flex-col justify-center px-6 py-24 overflow-hidden" style={{ backgroundColor: BG }}>
         {/* Stats */}
         <div className="mx-auto max-w-3xl text-center" ref={statsRef}>
           <div
@@ -297,117 +467,77 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Member draggable cards */}
-        <DraggableCardContainer className="relative mt-16 min-h-[28rem] w-full">
+        {/* Member static grid */}
+        <div className="mx-auto mt-16 max-w-5xl grid grid-cols-2 gap-6 lg:grid-cols-4">
           {[
             {
               name: "Ana Gutierrez",
               role: "Frontend Dev · Cochabamba",
               quote: "Conseguí mi primer cliente internacional a los 3 meses de unirme.",
               img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
-              className: "absolute top-4 left-[8%] rotate-[-4deg]",
             },
             {
               name: "Carlos Mamani",
               role: "Full Stack · La Paz",
               quote: "El network me abrió puertas que no sabía que existían.",
               img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-              className: "absolute top-16 left-[28%] rotate-[5deg]",
             },
             {
               name: "Valeria Torrez",
               role: "Product Designer · Santa Cruz",
               quote: "Las masterclasses semanales cambiaron mi nivel completamente.",
               img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
-              className: "absolute top-2 left-[50%] rotate-[-6deg]",
             },
             {
               name: "Diego Flores",
               role: "Backend Dev · Sucre",
               quote: "Pasé de freelancer local a trabajar con equipos en Europa.",
               img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-              className: "absolute top-20 left-[68%] rotate-[4deg]",
             },
           ].map((member) => (
-            <DraggableCardBody key={member.name} className={member.className}>
-              <img
-                src={member.img}
-                alt={member.name}
-                className="pointer-events-none relative z-10 h-48 w-full rounded-xl object-cover"
-              />
-              <div className="mt-4">
-                <p className="text-sm font-bold text-neutral-800">{member.name}</p>
-                <p className="text-xs text-neutral-500 mb-2">{member.role}</p>
-                <p className="text-sm italic text-neutral-600">"{member.quote}"</p>
-              </div>
-            </DraggableCardBody>
-          ))}
-        </DraggableCardContainer>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════
-          SCREEN 4 (top) — EVENTOS SEMANALES
-          Background: white, card: #0C3F78 rounded
-      ══════════════════════════════════════════════════════════════════════ */}
-      <section className="px-6 py-20" style={{ backgroundColor: "#FFFFFF" }}>
-        <div className="mx-auto max-w-2xl">
-          <BackgroundGradient containerClassName="rounded-3xl" className="rounded-3xl">
-            <div className="p-10 text-center md:p-14" style={{ backgroundColor: MID, borderRadius: "inherit" }}>
-            <h2
-              className="text-5xl font-bold italic text-white sm:text-6xl"
-              style={{ fontFamily: fH }}
+            <div
+              key={member.name}
+              className="flex flex-col rounded-2xl overflow-hidden"
+              style={{ backgroundColor: "#ffffff", boxShadow: "0 4px 24px rgba(12,63,120,0.12)" }}
             >
-              Eventos<br />semanales
-            </h2>
-            <p className="mx-auto mt-6 max-w-sm text-base leading-relaxed" style={{ color: CYAN }}>
-              Tenemos sesiones de{" "}
-              <strong>Building</strong> y práctica de inglés cada{" "}
-              <strong>semana</strong>, un evento presencial y una masterclass{" "}
-              <strong>cada mes.</strong>
-            </p>
-            <div className="mt-8 flex justify-center">
-              <a
-                href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                style={{
-                  borderRadius: "9999px",
-                  border: `2px solid ${CYAN}`,
-                  color: CYAN,
-                  fontFamily: fH,
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  padding: "14px 44px",
-                  letterSpacing: "0.04em",
-                  boxShadow: `0 0 24px ${CYAN}22`,
-                }}
-              >
-                Únete a los eventos <strong>ahora</strong>
-              </a>
+              <div className="relative w-full h-48">
+                <Image
+                  src={member.img}
+                  alt={member.name}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-4 flex flex-col gap-1">
+                <p className="text-sm font-bold text-neutral-800">{member.name}</p>
+                <p className="text-xs text-neutral-500">{member.role}</p>
+                <p className="text-sm italic text-neutral-600 mt-1">"{member.quote}"</p>
+              </div>
             </div>
-            </div>
-          </BackgroundGradient>
+          ))}
         </div>
       </section>
+
+
 
       {/* ══════════════════════════════════════════════════════════════════════
           SCREEN 4 (bottom) — EMPRESAS
           Background: white + ascii bg at low opacity
       ══════════════════════════════════════════════════════════════════════ */}
       <section
+        ref={(el) => { if (el) sectionRefs.current[4] = el; }}
         id="empresas"
-        className="relative overflow-hidden px-6 pb-20 pt-16 text-center"
+        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-6 py-20 text-center"
         style={{ backgroundColor: "#FFFFFF" }}
       >
-        {/* ASCII background */}
+        {/* ASCII background — pre-generated static image */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundImage: "url('/background2.png')",
+            backgroundImage: "url('/ascii-bg.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            opacity: 0.06,
           }}
         />
 
@@ -418,10 +548,10 @@ export default function Home() {
           </div>
 
           <h2
-            className="mt-4 text-2xl font-bold tracking-[0.18em]"
+            className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-snug"
             style={{ color: BRAND, fontFamily: fH }}
           >
-            EN EMPRESAS
+            En empresas
           </h2>
 
           <TextGenerateEffect
@@ -439,13 +569,11 @@ export default function Home() {
               animate={{ x: ["0%", "-50%"] }}
               transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
             >
-              {/* First set of logos */}
               {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
                 <div key={`${name}-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
                   {name}
                 </div>
               ))}
-              {/* Duplicate for seamless loop */}
               {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
                 <div key={`${name}-dup-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
                   {name}
@@ -458,7 +586,7 @@ export default function Home() {
           <div className="mt-12">
             <a
               href="#nosotros"
-              className="cursor-pointer"
+              className="cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
               style={{
                 display: "inline-block",
                 borderRadius: "9999px",
@@ -469,7 +597,7 @@ export default function Home() {
                 fontSize: "0.875rem",
                 letterSpacing: "0.18em",
                 padding: "14px 44px",
-                boxShadow: `0 4px 24px rgba(19,77,145,0.45)`,
+                boxShadow: `0 4px 24px rgba(19,77,145,0.6), 0 0 40px ${CYAN}18`,
               }}
             >
               CONOCE MÁS
@@ -483,8 +611,9 @@ export default function Home() {
           Background: #021E43 + circles bg
       ══════════════════════════════════════════════════════════════════════ */}
       <section
+        ref={(el) => { if (el) sectionRefs.current[5] = el; }}
         id="nosotros"
-        className="relative overflow-hidden px-6 pb-24 pt-20 text-center"
+        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-6 py-20 text-center"
         style={{ backgroundColor: BG }}
       >
         {/* Circles background — bottom center */}
@@ -506,13 +635,18 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-sm">
+        <div className="relative z-10 mx-auto max-w-2xl">
           <h2
             className="text-5xl font-bold leading-tight text-white md:text-6xl"
             style={{ fontFamily: fH }}
           >
-            Sobre<br />nosotros
+            Sobre nosotros
           </h2>
+
+          {/* Subtitle */}
+          <p className="mt-6 text-base leading-relaxed sm:text-lg" style={{ color: "rgba(255,255,255,0.7)", fontFamily: fB }}>
+            Somos un equipo boliviano con <strong className="text-white">+20 años de experiencia combinada</strong> en tecnología, eventos y startups. Tenemos alianzas y estamos asesorados por fondos de inversión como <strong style={{ color: CYAN }}>X</strong>, <strong style={{ color: CYAN }}>Y</strong> y <strong style={{ color: CYAN }}>Z</strong>.
+          </p>
 
           <div className="mt-12 flex flex-col items-center">
             {/* Avatar */}
@@ -531,6 +665,21 @@ export default function Home() {
             <p className="text-base" style={{ color: "rgba(255,255,255,0.65)" }}>
               Founder Dev Remoto Simple
             </p>
+            {/* LinkedIn */}
+            <a
+              href="https://www.linkedin.com/in/punamateo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 flex items-center gap-2 transition-all duration-200 hover:opacity-80"
+              style={{ color: CYAN, fontFamily: fH, fontWeight: 600, fontSize: "0.95rem" }}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                <rect x="2" y="9" width="4" height="12"/>
+                <circle cx="4" cy="4" r="2"/>
+              </svg>
+              LinkedIn
+            </a>
           </div>
         </div>
       </section>
@@ -538,15 +687,9 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════════════════════════════════ */}
-      <footer style={{ backgroundColor: BG }}>
-        {/* Vortex CTA strip */}
-        <Vortex
-          containerClassName="w-full"
-          className="flex flex-col items-center justify-center py-16 px-6 text-center"
-          particleCount={300}
-          baseHue={185}
-          backgroundColor="transparent"
-        >
+      <footer style={{ backgroundColor: "#0D1117" }}>
+        {/* CTA strip */}
+        <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
           <p className="mb-2 text-sm font-medium tracking-widest uppercase" style={{ color: `${CYAN}99` }}>
             Empieza hoy
           </p>
@@ -572,15 +715,12 @@ export default function Home() {
           >
             ÚNETE AHORA
           </a>
-        </Vortex>
+        </div>
 
-        {/* Bottom bar with logo + floating dock */}
-        <BackgroundBeamsWithCollision className="min-h-0 py-10 px-6">
-          <div className="relative z-10 mx-auto w-full max-w-5xl flex flex-col items-center gap-6">
-            {/* Logo */}
+        {/* Bottom bar */}
+        <div className="py-10 px-6 border-t border-white/5">
+          <div className="mx-auto w-full max-w-5xl flex flex-col items-center gap-6">
             <Image src="/logo.svg" alt="Dev Remoto Simple" width={120} height={25} />
-
-            {/* Floating Dock */}
             <FloatingDock
               items={[
                 { title: "Inicio", icon: <HomeIcon className="w-full h-full text-white/70" />, href: "#" },
@@ -592,26 +732,43 @@ export default function Home() {
               ]}
               desktopClassName="border-white/10"
             />
-
             <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
               © {new Date().getFullYear()} Dev Remoto Simple
             </p>
-
-            {/* Sparkles strip — bottom of footer */}
-            <div className="w-72 h-10 relative">
-              <SparklesCore
-                background="transparent"
-                minSize={0.4}
-                maxSize={1.2}
-                particleDensity={60}
-                particleColor={CYAN}
-                speed={0.8}
-                className="w-full h-full"
-              />
-            </div>
           </div>
-        </BackgroundBeamsWithCollision>
+        </div>
       </footer>
+
+      {/* ── Dot navigation ── */}
+      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-3">
+        {Array.from({ length: SECTION_COUNT }).map((_, i) => {
+          const isActive = activeSection === i;
+          return (
+            <button
+              key={i}
+              onClick={() => {
+                const target = sectionRefs.current[i];
+                if (!target) return;
+                setActiveSection(i);
+                window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+              }}
+              aria-label={`Ir a sección ${i + 1}`}
+              style={{
+                width: isActive ? "12px" : "8px",
+                height: isActive ? "12px" : "8px",
+                borderRadius: "9999px",
+                backgroundColor: isActive ? CYAN : "transparent",
+                border: `2px solid ${isActive ? CYAN : "#4A5A72"}`,
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                padding: 0,
+                boxShadow: isActive ? `0 0 8px ${CYAN}88` : "none",
+              }}
+            />
+          );
+        })}
+      </div>
+
     </div>
   );
 }
