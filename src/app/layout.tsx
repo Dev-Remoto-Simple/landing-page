@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "Dev Remoto Simple",
   description:
     "Comunidad tech en Bolivia. No importa quién eres ni de dónde vengas, tú también puedes crear cosas globales.",
+  icons: {
+    icon: "/logoface.png",
+  },
   openGraph: {
     title: "Dev Remoto Simple",
     description: "La comunidad tech de los que pensamos en grande.",
