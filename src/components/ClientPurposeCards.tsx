@@ -16,7 +16,7 @@ interface Purpose {
 
 export function ClientPurposeCards({ purposes }: { purposes: Purpose[] }) {
   return (
-    <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4 items-stretch">
+    <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
       {purposes.map(({ icon, title, desc }, i) => (
         <motion.div
           key={i}

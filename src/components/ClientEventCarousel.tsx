@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,18 @@ interface Event {
 
 export function ClientEventCarousel({ events }: { events: Event[] }) {
   const [eventIdx, setEventIdx] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const GAP = 20; // gap-5 = 1.25rem = 20px
+
+  useEffect(() => {
+    const measure = () => {
+      if (cardRef.current) setCardWidth(cardRef.current.offsetWidth);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -65,12 +77,13 @@ export function ClientEventCarousel({ events }: { events: Event[] }) {
       <div style={{ overflow: "hidden" }}>
         <motion.div
           className="flex gap-5"
-          animate={{ x: `calc(-${eventIdx} * (32rem + 1.25rem))` }}
+          animate={{ x: cardWidth ? -eventIdx * (cardWidth + GAP) : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           {events.map((ev, i) => (
             <div
               key={i}
+              ref={i === 0 ? cardRef : undefined}
               className="flex-shrink-0 rounded-2xl overflow-hidden"
               style={{ width: "min(32rem, calc(100vw - 3rem))", boxShadow: "0 4px 24px rgba(12,63,120,0.12)" }}
             >
