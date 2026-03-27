@@ -78,14 +78,14 @@ export default function Home() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section
         data-section-index={0}
-        className="relative flex min-h-screen flex-col items-center px-6 pt-24 pb-4"
+        className="relative flex min-h-screen flex-col items-center px-6 pt-20 pb-2 sm:pt-24 sm:pb-4"
         style={{ backgroundColor: BG, overflow: "visible" }}
       >
         <ClientBackgroundBeams />
 
         <div className="relative z-10 flex flex-grow flex-col items-center justify-center text-center">
           <h1
-            className="max-w-2xl text-4xl font-bold leading-snug text-white sm:text-5xl lg:text-6xl"
+            className="max-w-2xl text-3xl font-bold leading-snug text-white sm:text-5xl lg:text-6xl"
             style={{ fontFamily: fH }}
           >
             <strong>La comunidad tech</strong>{" "}
@@ -105,7 +105,7 @@ export default function Home() {
             href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
+            className="mt-6 sm:mt-10 cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
             style={{
               display: "inline-block",
               borderRadius: "9999px",
@@ -124,7 +124,7 @@ export default function Home() {
         </div>
 
         {/* Logo Carousel (Client Island) */}
-        <div className="relative z-10 w-full max-w-3xl text-center">
+        <div className="relative z-10 w-full max-w-3xl text-center mb-4">
           <p
             className="mb-4 text-sm tracking-widest uppercase text-white/40"
             style={{ fontFamily: fH }}
