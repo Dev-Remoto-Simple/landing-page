@@ -20,6 +20,5 @@ export function ClientBackgroundBeams() {
 
   if (isMobile) return null;
 
-  // 48 original beams * 0.8 = ~38 beams (20% fewer)
-  return <BackgroundBeams beamCount={38} />;
+  return <BackgroundBeams beamCount={10} />;
 }
