@@ -28,10 +28,10 @@ const CYAN    = "#74FAFD"; // accent highlights
 
 // ── Purpose cards ─────────────────────────────────────────────────────────────
 const purposes = [
-  { icon: "/proposito-01.png", title: "Crear",         desc: "la más importante comunidad tech primero en Bolivia y luego en Latam." },
-  { icon: "/proposito-02.png", title: "Conectar",      desc: "con los emprendedores e inversores que están liderando la innovación." },
-  { icon: "/proposito-03.png", title: "Educar",        desc: "al talento para que esté en el estado del arte de la tecnología." },
-  { icon: "/proposito-04.png", title: "Crear startups",desc: "y productos que compitan internacionalmente." },
+  { icon: "/proposito-01.png", title: "Comunidad", desc: "la más importante comunidad tech primero en Bolivia y luego en Latam." },
+  { icon: "/proposito-02.png", title: "Conexión", desc: "Ser el punto de unión del ecosistema tech de Sillicon Valley los emprendedores y talento de Bolivia y luego Latam" },
+  { icon: "/proposito-03.png", title: "Educación", desc: "Aprendizaje y creación constante de productos para que el talento esté en el estado del arte de la tecnología." },
+  { icon: "/proposito-04.png", title: "Emprendimiento",desc: "Montar startups de tecnología avanzada con visión global. Pensamos en grande desde el minuto 0" },
 ];
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
@@ -79,12 +79,9 @@ export default function Home() {
   const sectionRefs = useRef<HTMLElement[]>([]);
   const SECTION_COUNT = 6;
   const events = [
-    { img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop", caption: "Masterclass mensual · La Paz" },
-    { img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=500&fit=crop", caption: "Building session · Cochabamba" },
-    { img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&h=500&fit=crop", caption: "Networking presencial · Santa Cruz" },
-    { img: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=500&fit=crop", caption: "Demo Day · La Paz" },
-    { img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop", caption: "Práctica de inglés · Online" },
-    { img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&h=500&fit=crop", caption: "Workshop de producto · Santa Cruz" },
+    { img: "/evento-nodejs.png", caption: "Charla con Node.JS maintainer and Committee member · Santa Cruz" },
+    { img: "/evento-takenos.jpg", caption: "After office para remote workers con Takenos · Santa Cruz" },
+    { img: "/evento-padel.png", caption: "Padel Semanal enfocado en longevity · Santa Cruz" },
   ];
   const { ref: statsRef, inView: statsInView } = useInView();
   const count = useCounter(1000, 2200, statsInView);
@@ -197,7 +194,10 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg sm:text-xl text-white/70">
-            Conectamos al talento más ambicioso con las empresas más ambiciosas.
+              Eventos tech para conectar el  {" "}
+            <strong>mejor talento de Latam </strong>
+            con las {" "}
+            <strong>mejores empresas mundo. </strong>
           </p>
 
           {/* ÚNETE button */}
@@ -240,34 +240,22 @@ export default function Home() {
               animate={{ x: ["0%", "-50%"] }}
               transition={{ repeat: Infinity, ease: "linear", duration: 22 }}
             >
-              {["Node.js", "Google", "Facebook", "Vercel", "AWS", "Microsoft", "Stripe", "Notion", "Apple"].map((name, i) => (
-                <div
-                  key={`${name}-${i}`}
-                  className="flex-shrink-0"
-                  style={{
-                    color: "#ffffff",
-                    fontFamily: fH,
-                    fontWeight: 700,
-                    fontSize: "1.5rem",
-                    opacity: 0.25,
-                  }}
-                >
-                  {name}
+              {[
+                { src: "/logo-newnodejs.png", alt: "Node.js", w: 120, h: 40 },
+                { src: "/logo-takenos.avif", alt: "Takenos", w: 120, h: 40 },
+                { src: "/logo-nodi.png", alt: "Nodi", w: 120, h: 40 },
+              ].map((logo, i) => (
+                <div key={`${logo.alt}-${i}`} className="flex-shrink-0" style={{ opacity: 0.6, filter: "grayscale(100%)", ...(logo.alt === "Node.js" ? { backgroundColor: "#fff", borderRadius: "8px", padding: "4px" } : {}) }}>
+                  <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} className="object-contain" />
                 </div>
               ))}
-              {["Node.js", "Google", "Facebook", "Vercel", "AWS", "Microsoft", "Stripe", "Notion", "Apple"].map((name, i) => (
-                <div
-                  key={`dup-${name}-${i}`}
-                  className="flex-shrink-0"
-                  style={{
-                    color: "#ffffff",
-                    fontFamily: fH,
-                    fontWeight: 700,
-                    fontSize: "1.5rem",
-                    opacity: 0.25,
-                  }}
-                >
-                  {name}
+              {[
+                { src: "/logo-newnodejs.png", alt: "Node.js", w: 120, h: 40 },
+                { src: "/logo-takenos.avif", alt: "Takenos", w: 120, h: 40 },
+                { src: "/logo-nodi.png", alt: "Nodi", w: 120, h: 40 },
+              ].map((logo, i) => (
+                <div key={`dup-${logo.alt}-${i}`} className="flex-shrink-0" style={{ opacity: 0.6, filter: "grayscale(100%)", ...(logo.alt === "Node.js" ? { backgroundColor: "#fff", borderRadius: "8px", padding: "4px" } : {}) }}>
+                  <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} className="object-contain" />
                 </div>
               ))}
             </motion.div>
@@ -404,18 +392,10 @@ export default function Home() {
         />
 
         <div className="relative z-10 mx-auto max-w-6xl text-center">
-
-          {/* Heading */}
-          <motion.h2
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-snug"
-            style={{ color: BRAND, fontFamily: fH }}
-          >
-            Nuestro propósito es:
-          </motion.h2>
+          <p className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-snug" style={{ fontFamily: fH, color: BRAND}}>
+            You can build <span style={{ color: CYAN }}>global</span> things.
+          </p>
+          <p className="mt-4 text-2xl font-bold sm:text-3xl" style={{color: BRAND, fontFamily: fH}}>Nuestro propósito es:</p>
 
           {/* 4-column cards */}
           <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4 items-stretch">
@@ -459,64 +439,75 @@ export default function Home() {
             <span>+</span><span>{count.toLocaleString()}</span>
           </div>
           <p className="mt-6 text-xl font-bold text-white sm:text-2xl" style={{ fontFamily: fH }}>
-            Personas de todos los perfiles tienen algo en común:
-          </p>
-          <p className="mt-4 text-lg" style={{ color: "rgba(255,255,255,0.85)" }}>
-            <strong className="text-white">Están aprendiendo</strong> y creando productos{" "}
-            <strong style={{ color: CYAN }}>globales.</strong>
+            En la comunidad. Porque el talento está en todas partes. Y ahora, las oportunidades también:
           </p>
         </div>
 
-        {/* Member static grid */}
-        <div className="mx-auto mt-16 max-w-5xl grid grid-cols-2 gap-6 lg:grid-cols-4">
-          {[
+        {/* Member comments — newsfeed style, fades out at bottom */}
+        {(() => {
+          const members = [
             {
-              name: "Ana Gutierrez",
-              role: "Frontend Dev · Cochabamba",
-              quote: "Conseguí mi primer cliente internacional a los 3 meses de unirme.",
-              img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+              name: "Weimar Torrez",
+              role: "Backend Engineer · La Paz",
+              quote: "Abrió mis perspectivas para conocer las oportunidades globales y trabajar en una empresa de Milano, Italia",
+              linkedin: "https://www.linkedin.com/in/weimar-alexander-torres-herrera-8558b6140/",
             },
             {
-              name: "Carlos Mamani",
-              role: "Full Stack · La Paz",
-              quote: "El network me abrió puertas que no sabía que existían.",
-              img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+              name: "Javier Soruco",
+              role: "AI Engineer · Cochabamba",
+              quote: "Contratado por NxtPhase AI, empresa holandesa remoto desde Bolivia",
+              linkedin: "https://www.linkedin.com/in/javier-soruco-lopez-b8802a193/",
             },
             {
-              name: "Valeria Torrez",
-              role: "Product Designer · Santa Cruz",
-              quote: "Las masterclasses semanales cambiaron mi nivel completamente.",
-              img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
-            },
-            {
-              name: "Diego Flores",
-              role: "Backend Dev · Sucre",
-              quote: "Pasé de freelancer local a trabajar con equipos en Europa.",
-              img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-            },
-          ].map((member) => (
+              name: "Max Baldiviezo",
+              role: "Data Scientist · Santa Cruz",
+              quote: "El networking es fundamental y la comunidad me ha ayudado a expandir mi red a nivel internacional",
+              linkedin: "https://www.linkedin.com/in/maxbaldiviezo/",
+            }
+          ];
+          const allMembers = [...members, ...members];
+          return (
             <div
-              key={member.name}
-              className="flex flex-col rounded-2xl overflow-hidden"
-              style={{ backgroundColor: "#ffffff", boxShadow: "0 4px 24px rgba(12,63,120,0.12)" }}
+              className="mx-auto mt-16 max-w-3xl overflow-hidden"
+              style={{
+                maxHeight: "340px",
+                maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+              }}
             >
-              <div className="relative w-full h-48">
-                <Image
-                  src={member.img}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 640px) 50vw, 25vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4 flex flex-col gap-1">
-                <p className="text-sm font-bold text-neutral-800">{member.name}</p>
-                <p className="text-xs text-neutral-500">{member.role}</p>
-                <p className="text-sm italic text-neutral-600 mt-1">"{member.quote}"</p>
-              </div>
+              <motion.div
+                className="flex flex-col gap-4"
+                animate={{ y: ["0%", "-50%"] }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
+              >
+                {allMembers.map((member, i) => (
+                  <div
+                    key={`${member.name}-${i}`}
+                    className="rounded-xl p-4"
+                    style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                  >
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-white">{member.name}</span>
+                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>·</span>
+                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{member.role}</span>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>
+                      &ldquo;{member.quote}&rdquo;
+                    </p>
+                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs hover:underline" style={{ color: CYAN }}>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                      </svg>
+                      LinkedIn
+                    </a>
+                  </div>
+                ))}
+              </motion.div>
             </div>
-          ))}
-        </div>
+          );
+        })()}
       </section>
 
 
@@ -554,13 +545,12 @@ export default function Home() {
             En empresas
           </h2>
 
-          <TextGenerateEffect
-            words="Apoyamos a las organizaciones en su contratación de talento tecnológico mediante servicios de staffing boutique, y el desarrollo de su estrategia tecnológica desde los primeros pasos hasta su implementación."
+          <p
             className="mx-auto mt-7 max-w-lg text-base leading-relaxed font-normal"
-            filter={true}
-            duration={0.3}
-            style={{ color: BRAND } as any}
-          />
+            style={{ color: BRAND }}
+          >
+            Apoyamos a startups en su contratación de talento tech latino remoto mediante servicios de reclutamiento y staffing boutique.
+          </p>
 
           {/* Logo carousel */}
           <div className="mt-12 overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)" }}>
@@ -569,14 +559,20 @@ export default function Home() {
               animate={{ x: ["0%", "-50%"] }}
               transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
             >
-              {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
-                <div key={`${name}-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
-                  {name}
+              {[
+                { src: "/logo-ciaoelsa.png", alt: "ciaoElsa", w: 120, h: 40 },
+                { src: "/logo-nxtphaseai.png", alt: "NXtPhaseAI", w: 120, h: 40 },
+              ].map((logo, i) => (
+                <div key={`${logo.alt}-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ filter: "grayscale(100%)" }}>
+                  <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} className="object-contain" />
                 </div>
               ))}
-              {["Google", "Microsoft", "Amazon", "Meta", "Apple", "Stripe", "Vercel", "Notion"].map((name, i) => (
-                <div key={`${name}-dup-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ color: BRAND, fontFamily: fH, fontWeight: 700, fontSize: "1.5rem" }}>
-                  {name}
+              {[
+                { src: "/logo-ciaoelsa.png", alt: "ciaoElsa", w: 120, h: 40 },
+                { src: "/logo-nxtphaseai.png", alt: "NXtPhaseAI", w: 120, h: 40 },
+              ].map((logo, i) => (
+                <div key={`dup-${logo.alt}-${i}`} className="flex-shrink-0 opacity-40 hover:opacity-70 transition-opacity duration-200" style={{ filter: "grayscale(100%)" }}>
+                  <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} className="object-contain" />
                 </div>
               ))}
             </motion.div>
@@ -585,7 +581,9 @@ export default function Home() {
           {/* CONOCE MÁS button */}
           <div className="mt-12">
             <a
-              href="#nosotros"
+              href="https://ywqd0p9zpc4.typeform.com/to/Ymhmy1Qy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
               style={{
                 display: "inline-block",
@@ -640,12 +638,12 @@ export default function Home() {
             className="text-5xl font-bold leading-tight text-white md:text-6xl"
             style={{ fontFamily: fH }}
           >
-            Sobre nosotros
+            ¿Por qué hacemos esto?
           </h2>
 
           {/* Subtitle */}
           <p className="mt-6 text-base leading-relaxed sm:text-lg" style={{ color: "rgba(255,255,255,0.7)", fontFamily: fB }}>
-            Somos un equipo boliviano con <strong className="text-white">+20 años de experiencia combinada</strong> en tecnología, eventos y startups. Tenemos alianzas y estamos asesorados por fondos de inversión como <strong style={{ color: CYAN }}>X</strong>, <strong style={{ color: CYAN }}>Y</strong> y <strong style={{ color: CYAN }}>Z</strong>.
+            Como decía Hegel, no existe la "autopercepción" si no es a través del <em>otro</em>. Hoy existe una demanda única de buen talento remoto, y nosotros, como latinos, queremos conocer al talento regional y ser el punto de conexión que le permita acceder a las mejores oportunidades.
           </p>
 
           <div className="mt-12 flex flex-col items-center">
@@ -688,54 +686,52 @@ export default function Home() {
           FOOTER
       ══════════════════════════════════════════════════════════════════════ */}
       <footer style={{ backgroundColor: "#0D1117" }}>
-        {/* CTA strip */}
-        <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-          <p className="mb-2 text-sm font-medium tracking-widest uppercase" style={{ color: `${CYAN}99` }}>
-            Empieza hoy
-          </p>
-          <h3 className="mb-6 text-3xl font-bold text-white sm:text-4xl" style={{ fontFamily: fH }}>
-            You can build <span style={{ color: CYAN }}>global</span> things.
-          </h3>
-          <a
-            href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
-            style={{
-              borderRadius: "9999px",
-              backgroundColor: BRAND,
-              color: "#fff",
-              fontFamily: fH,
-              fontWeight: 700,
-              fontSize: "0.875rem",
-              letterSpacing: "0.2em",
-              padding: "16px 48px",
-              boxShadow: `0 4px 24px rgba(19,77,145,0.5), 0 0 40px ${CYAN}22`,
-            }}
-          >
-            ÚNETE AHORA
-          </a>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="py-10 px-6 border-t border-white/5">
-          <div className="mx-auto w-full max-w-5xl flex flex-col items-center gap-6">
-            <Image src="/logo.svg" alt="Dev Remoto Simple" width={120} height={25} />
-            <FloatingDock
-              items={[
-                { title: "Inicio", icon: <HomeIcon className="w-full h-full text-white/70" />, href: "#" },
-                { title: "Comunidad", icon: <Users className="w-full h-full text-white/70" />, href: "#comunidad" },
-                { title: "Eventos", icon: <Calendar className="w-full h-full text-white/70" />, href: "#" },
-                { title: "LinkedIn", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-white/70"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>, href: "#" },
-                { title: "WhatsApp", icon: <MessageCircle className="w-full h-full text-white/70" />, href: "#" },
-                { title: "Web", icon: <Globe2 className="w-full h-full text-white/70" />, href: "#" },
-              ]}
-              desktopClassName="border-white/10"
-            />
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-              © {new Date().getFullYear()} Dev Remoto Simple
-            </p>
+        <div className="relative mx-auto max-w-5xl px-6 py-12">
+          {/* Social links — top right corner */}
+          <div className="absolute top-6 right-6 flex items-center gap-4">
+            {[
+              { title: "LinkedIn", href: "https://www.linkedin.com/company/dev-remoto-simple/", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-white/50 hover:text-white/80 transition-colors"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
+              { title: "WhatsApp", href: "https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t", icon: <MessageCircle className="w-5 h-5 text-white/50 hover:text-white/80 transition-colors" /> },
+            ].map((link) => (
+              <a key={link.title} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.title}>
+                {link.icon}
+              </a>
+            ))}
           </div>
+
+          {/* CTA content */}
+          <div className="flex flex-col items-center text-center">
+            <p className="mb-2 text-sm font-medium tracking-widest uppercase" style={{ color: `${CYAN}99` }}>
+              Empieza hoy
+            </p>
+            <h3 className="mb-6 text-3xl font-bold text-white sm:text-4xl" style={{ fontFamily: fH }}>
+              You can build <span style={{ color: CYAN }}>global</span> things.
+            </h3>
+            <a
+              href="https://chat.whatsapp.com/I28KiCgdRv43fpNQTWpjFK?mode=gi_t"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block cursor-pointer transition-all duration-200 hover:brightness-110 hover:scale-105"
+              style={{
+                borderRadius: "9999px",
+                backgroundColor: BRAND,
+                color: "#fff",
+                fontFamily: fH,
+                fontWeight: 700,
+                fontSize: "0.875rem",
+                letterSpacing: "0.2em",
+                padding: "16px 48px",
+                boxShadow: `0 4px 24px rgba(19,77,145,0.5), 0 0 40px ${CYAN}22`,
+              }}
+            >
+              ÚNETE AHORA
+            </a>
+          </div>
+
+          {/* Copyright inline */}
+          <p className="mt-8 text-center text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+            © {new Date().getFullYear()} Dev Remoto Simple
+          </p>
         </div>
       </footer>
 

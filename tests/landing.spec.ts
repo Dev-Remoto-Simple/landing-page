@@ -47,7 +47,7 @@ test.describe("Landing page", () => {
     // Wait for scroll to complete
     await page.waitForTimeout(1200);
     // Propósito heading should be near the viewport
-    const heading = page.locator("text=Nuestro propósito");
+    const heading = page.locator("text=Nuestro propósito es:");
     await expect(heading).toBeInViewport();
   });
 
