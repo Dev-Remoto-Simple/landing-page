@@ -51,9 +51,9 @@ const members = [
 ];
 
 const heroLogos = [
-  { src: "/logo-newnodejs.png", alt: "Node.js", w: 120, h: 40 },
-  { src: "/logo-takenos.avif", alt: "Takenos", w: 120, h: 40 },
-  { src: "/logo-nodi.png", alt: "Nodi", w: 120, h: 40 },
+  { src: "/logo-newnodejs.svg", alt: "Node.js", w: 120, h: 40 },
+  { src: "/logo-takenos.svg", alt: "Takenos", w: 120, h: 40 },
+  { src: "/logo-nodi.svg", alt: "Nodi", w: 120, h: 40 },
 ];
 
 const empresasLogos = [

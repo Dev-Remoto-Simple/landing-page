@@ -32,7 +32,6 @@ export function ClientLogoCarousel({ logos, duration = 22, variant = "hero" }: C
           style={{
             opacity: variant === "hero" ? 0.6 : undefined,
             filter: "grayscale(100%)",
-            ...(variant === "hero" && logo.alt === "Node.js" ? { backgroundColor: "#fff", borderRadius: "8px", padding: "4px" } : {}),
           }}
         >
           <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} className="object-contain" />
